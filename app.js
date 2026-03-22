@@ -1,4 +1,4 @@
-﻿// ===== R6S DATA =====
+// ===== R6S DATA =====
 const R6S_MAPS = [
     'Bank', 'Border', 'Chalet', 'Clubhouse', 'Coastline', 'Consulate',
     'Emerald Plains', 'Kafe Dostoyevsky', 'Kanal', 'Lair', 'Nighthaven Labs',
@@ -125,7 +125,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: 'CEO bölgesi for Denari setup guide.',
         link: 'https://www.instagram.com/reel/DRdx7EiDDNg/'
     },
     {
@@ -136,7 +135,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F bölgesi for temel site kurulumu (reinforce ve rotasyonlar).',
         link: 'https://www.instagram.com/reel/DUHe0iAD5aV/'
     },
     {
@@ -147,7 +145,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: 'Basement for reinforce noktaları ve rotasyon rehberi.',
         link: 'https://www.instagram.com/reel/DUHfrj3DCD9/'
     },
     {
@@ -158,7 +155,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Trick',
-        description: 'Clubhouse on farklı siteler for Fenrir taktikleri and device placements.',
         link: 'https://www.instagram.com/reel/DUgWZNzEnxM/'
     },
     {
@@ -169,7 +165,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: 'Basement Laundry/Supply for Azami trick tactics.',
         link: 'https://www.instagram.com/reel/DPSV-logPDa/'
     },
     {
@@ -180,7 +175,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F Radar/Server for site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUjp6ANFOga/'
     },
     {
@@ -191,7 +185,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: 'Basement Garage/Cafeteria site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUjpSDpidjj/'
     },
     {
@@ -202,7 +195,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F CEO/Meeting site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUjoq14FKjI/'
     },
     {
@@ -213,7 +205,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F Command Center/Server site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUHdjG9Da-W/'
     },
     {
@@ -224,7 +215,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F Hookah/Billiards site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUEsf0cgWko/'
     },
     {
@@ -235,7 +225,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Castle',
         category: 'Setup',
-        description: '1F Kitchen/Service for Castle setup guide.',
         link: 'https://www.instagram.com/reel/DUEl1dxjyOJ/'
     },
     {
@@ -246,7 +235,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '1F Kitchen/Bakery for Azami setup guide.',
         link: 'https://www.instagram.com/reel/DUElVoXEY0w/'
     },
     {
@@ -257,7 +245,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '3F Bar/Cocktail Lounge site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUCGo4iDisg/'
     },
     {
@@ -268,7 +255,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '1F Kitchen/Service general site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUCF8Hpj3ko/'
     },
     {
@@ -279,7 +265,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F CEO Office general site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUCE5gZj8sH/'
     },
     {
@@ -290,7 +275,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: 'Basement CCTV/Lockers site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DT_UjfMjy5T/'
     },
     {
@@ -301,7 +285,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: 'Basement Church/Arsenal site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DT_OswWlHkR/'
     },
     {
@@ -312,7 +295,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F Gym/Bedroom site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DT_Mo7EkeOx/'
     },
     {
@@ -323,7 +305,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F CCTV/Cash Room site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DT9PmCnCepW/'
     },
     {
@@ -334,7 +315,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '1F Kitchen/Dining Hall site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DT9OtUgD18r/'
     },
     {
@@ -345,7 +325,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks site kurulum rehberi.",
         link: 'https://www.instagram.com/reel/DT9MjxLiRPg/'
     },
     {
@@ -356,7 +335,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Trick',
-        description: 'Basement Wine Cellar/Snowmobile for Denari trick tactics.',
         link: 'https://www.instagram.com/reel/DT6VF1egm_N/'
     },
     {
@@ -367,7 +345,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: '2F Armory Lockers/Archives for Azami trick tactics.',
         link: 'https://www.instagram.com/reel/DVo4A8kgs79/'
     },
     {
@@ -378,7 +355,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Nomad',
         category: 'Trick',
-        description: 'Bank on Nomad attack tactics.',
         link: 'https://www.instagram.com/reel/DVOffFHgoaK/'
     },
     {
@@ -389,7 +365,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Maverick',
         category: 'Trick',
-        description: '2F CCTV/Cash Room for Maverick attack tactics.',
         link: 'https://www.instagram.com/reel/DVJ42bkgrOy/'
     },
     {
@@ -400,7 +375,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Trick',
-        description: 'On all maps general Fenrir trick taktikleri and device placements.',
         link: 'https://www.instagram.com/reel/DUya9MfDF2Z/'
     },
     {
@@ -411,7 +385,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Trick',
-        description: '2F Aviator/Games Room for Denari trick tactics.',
         link: 'https://www.instagram.com/reel/DUv3VfjjBpU/'
     },
     {
@@ -422,7 +395,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Spawn Peek',
-        description: 'Oregon spawn peek spots.',
         link: 'https://www.instagram.com/reel/DUtRa_PDB4_/'
     },
     {
@@ -433,7 +405,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Spawn Peek',
-        description: 'Chalet spawn peek spots.',
         link: 'https://www.instagram.com/reel/DUs1773jNjp/'
     },
     {
@@ -444,7 +415,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Valkyrie',
         category: 'Trick',
-        description: 'On all maps Valkyrie camera tactics and trick spots.',
         link: 'https://www.instagram.com/reel/DUqValeDFI0/'
     },
     {
@@ -455,7 +425,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'ANY',
         category: 'Claymore Trick',
-        description: 'On all maps general claymore trick tactics.',
         link: 'https://www.instagram.com/reel/DUaabQMgvww/'
     },
     // ===== NEW TACTICS (v2) =====
@@ -467,7 +436,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Impact Grenade Trick',
-        description: 'Basement Church/Arsenal impact grenade trick tactics.',
         link: 'https://www.instagram.com/reel/DUTJtdjgkw0/'
     },
     {
@@ -478,7 +446,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Sledge',
         category: 'Grenade Trick',
-        description: 'On all maps Sledge grenade trick tactics.',
         link: 'https://www.instagram.com/reel/DUOkOE2Al9h/'
     },
     {
@@ -489,7 +456,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Thermite',
         category: 'Thermite Trick',
-        description: '1F Kitchen/Service Entrance for Thermite trick.',
         link: 'https://www.instagram.com/reel/DUOVpdZghv6/'
     },
     {
@@ -500,7 +466,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Spawn Peek',
-        description: 'Outback Azami spawn peek tactics.',
         link: 'https://www.instagram.com/reel/DT5VNx7AikW/'
     },
     {
@@ -511,7 +476,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'ANY',
         category: 'Grenade Lineup',
-        description: '2F Armory Lockers/Archives grenade lineup.',
         link: 'https://www.instagram.com/reel/DVo6W9ygMtZ/'
     },
     {
@@ -522,7 +486,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Thermite',
         category: 'Thermite Trick',
-        description: '1F Kitchen/Dining Hall Thermite trick.',
         link: 'https://www.instagram.com/reel/DVmLlSFEeeb/'
     },
     {
@@ -533,7 +496,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Trophy/Statuary Room Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DVADBPxgN4I/'
     },
     {
@@ -544,7 +506,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: 'Basement Wine Cellar/Snowmobile Maestro setup.',
         link: 'https://www.instagram.com/reel/DU9bMjMAAhr/'
     },
     {
@@ -555,7 +516,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Hookah/Billiards Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DU4isjZAPAv/'
     },
     {
@@ -566,7 +526,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F CEO Office Zero camera placement tactics.',
         link: 'https://www.instagram.com/reel/DTDKdS1gJ7e/'
     },
     {
@@ -577,7 +536,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Echo',
         category: 'Trick',
-        description: '2F CCTV/Cash Room Echo trick tactics.',
         link: 'https://www.instagram.com/reel/DTAlsutAEvx/'
     },
     {
@@ -588,7 +546,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Trick',
-        description: 'Basement Wine Cellar/Snowmobile Zero attack trick.',
         link: 'https://www.instagram.com/reel/DS9zIv5AJUe/'
     },
     {
@@ -599,7 +556,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Trick',
-        description: '2F Armory Lockers/Archives Zero attack trick.',
         link: 'https://www.instagram.com/reel/DS7OZ0yAPM_/'
     },
     {
@@ -610,7 +566,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '1F Kitchen/Service Azami setup guide.',
         link: 'https://www.instagram.com/reel/DSWW_eSgO84/'
     },
     {
@@ -621,7 +576,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Valkyrie',
         category: 'Setup',
-        description: 'Basement Laundry/Supply Valkyrie kamera setup.',
         link: 'https://www.instagram.com/reel/DSThoODAGYc/'
     },
     {
@@ -632,7 +586,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: 'Basement CCTV/Lockers Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DSRTkylgPLt/'
     },
     {
@@ -643,7 +596,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Mute',
         category: 'Setup',
-        description: '3F Bar/Cocktail Lounge Mute setup guide.',
         link: 'https://www.instagram.com/reel/DQ-v48UADUD/'
     },
     {
@@ -654,7 +606,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Aviator/Games Room Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DQ5uyUaANPF/'
     },
     {
@@ -665,7 +616,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks Fenrir setup guide.",
         link: 'https://www.instagram.com/reel/DQqXcGNgPMt/'
     },
     {
@@ -676,7 +626,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks Denari setup guide.",
         link: 'https://www.instagram.com/reel/DWAWFJYADxn/'
     },
     {
@@ -687,7 +636,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '2F CCTV/Cash Room Azami setup guide.',
         link: 'https://www.instagram.com/reel/DWAC-V9jUfJ/'
     },
     {
@@ -698,7 +646,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: '2F Master Bedroom/Office Denari setup guide.',
         link: 'https://www.instagram.com/reel/DV_8wL0iGbd/'
     },
     {
@@ -709,7 +656,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Trick',
-        description: "2F Kids' Dorms/Bunks Maestro trick tactics.",
         link: 'https://www.instagram.com/reel/DVsHMT4DL_c/'
     },
     {
@@ -720,7 +666,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: 'Basement Wine Cellar/Snowmobile Azami setup.',
         link: 'https://www.instagram.com/reel/DVmHaFZD3E7/'
     },
     {
@@ -731,7 +676,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F CCTV/Cash Room Zero camera placement tactics.',
         link: 'https://www.instagram.com/reel/DVO4fSsDTOT/'
     },
     // ===== NEW TACTICS (v3) =====
@@ -743,7 +687,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: 'Basement Garage/Cafeteria Denari setup guide.',
         link: 'https://www.instagram.com/reel/DPK5K1NDBIq/'
     },
     {
@@ -754,7 +697,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Aviator/Games Room Maestro setup.',
         link: 'https://www.instagram.com/reel/DVtx2s1D_R0/'
     },
     {
@@ -765,7 +707,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '2F Hookah/Billiards Azami setup guide.',
         link: 'https://www.instagram.com/reel/DVsOzaSDCw4/'
     },
     {
@@ -776,7 +717,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F Armory Lockers/Archives Zero camera trick.',
         link: 'https://www.instagram.com/reel/DVj5PA2D2m0/'
     },
     {
@@ -787,7 +727,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Setup',
-        description: "2F/1F Kids' Dorms / Kitchen Fenrir setup guide.",
         link: 'https://www.instagram.com/reel/DVPfQTdj4MQ/'
     },
     {
@@ -798,7 +737,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: 'Basement Laundry/Supply Azami trick.',
         link: 'https://www.instagram.com/reel/DVNdGL_AJN3/'
     },
     {
@@ -809,7 +747,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Maverick & Gridlock',
         category: 'Duo Attack',
-        description: "2F Kids' Dorms/Bunks Maverick & Gridlock duo attack tactic.",
         link: 'https://www.instagram.com/reel/DRd46jaDOWZ/'
     },
     {
@@ -820,7 +757,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '2F Radar/Server Azami setup guide.',
         link: 'https://www.instagram.com/reel/DQd_IUkgBKK/'
     },
     {
@@ -831,7 +767,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Frost',
         category: 'Trick',
-        description: "2F Kids' Dorms/Bunks Frost trick tactics.",
         link: 'https://www.instagram.com/reel/DQd3dt7jmWE/'
     },
     {
@@ -842,7 +777,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks Maestro setup guide.",
         link: 'https://www.instagram.com/reel/DQa5gYnDO4T/'
     },
     {
@@ -853,7 +787,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Hookah/Billiards Maestro setup.',
         link: 'https://www.instagram.com/reel/DWHxUizDKB8/'
     },
     {
@@ -864,7 +797,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Spawn Peek',
-        description: 'Kafe Dostoyevsky spawn peek spots.',
         link: 'https://www.instagram.com/reel/DVzK9qwDLP7/'
     },
     {
@@ -875,7 +807,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: 'Skyscraper on Azami trick tactics.',
         link: 'https://www.instagram.com/reel/DVmS6y5kq86/'
     },
     {
@@ -886,7 +817,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zofia',
         category: 'Trick',
-        description: '2F Gym/Bedroom Zofia attack trick.',
         link: 'https://www.instagram.com/reel/DWKcqyVABv5/'
     },
     {
@@ -897,7 +827,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Capitão',
         category: 'Trick',
-        description: '2F Gym/Bedroom Capitão attack trick.',
         link: 'https://www.instagram.com/reel/DWH--16AHp3/'
     },
     {
@@ -908,7 +837,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Trick',
-        description: 'Basement Church/Arsenal Denari trick.',
         link: 'https://www.instagram.com/reel/DWFwww-gOE9/'
     },
     {
@@ -919,7 +847,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Buck',
         category: 'Trick',
-        description: 'Basement Assembly/Animatronics Buck attack trick.',
         link: 'https://www.instagram.com/reel/DWDGY2qgB3E/'
     },
     {
@@ -930,7 +857,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Melusi',
         category: 'Setup',
-        description: '2F Hookah/Billiards Melusi setup guide.',
         link: 'https://www.instagram.com/reel/DV9AYBCgN2F/'
     },
     {
@@ -941,7 +867,6 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: "2F Kids' Dorms/Bunks Azami trick.",
         link: 'https://www.instagram.com/reel/DV68dVAgKI7/'
     },
     {
@@ -952,7 +877,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F CCTV/Cash Room Zero camera trick.',
         link: 'https://www.instagram.com/reel/DV4d4QFgLOx/'
     },
     {
@@ -963,7 +887,6 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'ANY',
         category: 'Grenade Lineup',
-        description: 'Coastline general grenade lineup tactics.',
         link: 'https://www.instagram.com/reel/DVr3HBKgHg6/'
     }
 ];
@@ -1002,7 +925,6 @@ const dom = {
     inputFloor: $('#inputFloor'),
     inputRole: $('#inputRole'),
     inputOperator: $('#inputOperator'),
-    inputDescription: $('#inputDescription'),
     inputLink: $('#inputLink'),
     btnSubmitText: $('#btnSubmitText'),
     deleteOverlay: $('#deleteOverlay'),
@@ -1260,7 +1182,7 @@ function getFilteredTactics() {
         if (floorFilter && t.floor !== floorFilter) return false;
         if (roleFilter && t.role !== roleFilter) return false;
         if (search) {
-            const searchStr = `${t.map} ${t.site} ${t.operator} ${t.category} ${t.description} ${t.floor || ''} ${t.role || ''}`.toLowerCase();
+            const searchStr = `${t.map} ${t.site} ${t.operator} ${t.category} ${t.floor || ''} ${t.role || ''}`.toLowerCase();
             if (!searchStr.includes(search)) return false;
         }
         return true;
@@ -1324,7 +1246,6 @@ function renderTactics() {
                 ${t.operator && t.operator !== 'ANY' ? `<span class="tag tag-operator"><img class="tag-op-icon" src="${operatorIcon}" alt="" onerror="this.style.display='none'"> ${escapeHtml(t.operator)}</span>` : ''}
                 <span class="tag tag-category" data-category="${escapeHtml(t.category)}">${escapeHtml(t.category)}</span>
             </div>
-            ${t.description ? `<div class="card-description">${escapeHtml(t.description)}</div>` : ''}
             <a href="${escapeHtml(t.link)}" target="_blank" rel="noopener noreferrer" class="card-link">
                 <span class="link-platform ${platform.class}">${platform.icon} ${platform.name}</span>
                 <span>${escapeHtml(shortenUrl(t.link))}</span>
@@ -1407,7 +1328,6 @@ function openEditModal(id) {
     dom.inputRole.value = tactic.role || 'Defender';
     dom.inputSite.value = tactic.site || '';
     dom.inputOperator.value = tactic.operator || '';
-    dom.inputDescription.value = tactic.description || '';
     dom.inputLink.value = tactic.link || '';
 
     dom.modalOverlay.classList.remove('hidden');
@@ -1430,7 +1350,6 @@ function handleFormSubmit(e) {
         role: dom.inputRole.value,
         operator: dom.inputOperator.value || 'ANY',
         category: dom.inputCategory.value,
-        description: dom.inputDescription.value,
         link: dom.inputLink.value
     };
 
