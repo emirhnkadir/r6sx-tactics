@@ -25,7 +25,8 @@ const R6S_OPERATORS = {
 const R6S_CATEGORIES = [
     'Setup', 'Trick', 'Anchor', 'Roam', 'Pixel Peek', 'C4/Nitro',
     'Camera Spots', 'Utility', 'Spawn Peek', 'Claymore Trick',
-    'Impact Grenade Trick', 'Grenade Trick', 'Thermite Trick', 'Zero Cam Trick'
+    'Impact Grenade Trick', 'Grenade Trick', 'Thermite Trick', 'Zero Cam Trick',
+    'Duo Attack', 'Grenade Lineup'
 ];
 
 const R6S_FLOORS = ['B', '1F', '2F', '3F', 'ANY'];
@@ -509,8 +510,8 @@ const DEFAULT_TACTICS = [
         site: 'Armory Lockers / Archives',
         role: 'Attacker',
         operator: 'ANY',
-        category: 'Grenade Trick',
-        description: '2F Armory Lockers/Archives grenade trick.',
+        category: 'Grenade Lineup',
+        description: '2F Armory Lockers/Archives grenade lineup.',
         link: 'https://www.instagram.com/reel/DVo6W9ygMtZ/'
     },
     {
@@ -732,10 +733,242 @@ const DEFAULT_TACTICS = [
         category: 'Zero Cam Trick',
         description: '2F CCTV/Cash Room Zero kamera yerleşim taktikleri.',
         link: 'https://www.instagram.com/reel/DVO4fSsDTOT/'
+    },
+    // ===== NEW TACTICS (v3) =====
+    {
+        id: 'pre_57',
+        map: 'Consulate',
+        floor: 'B',
+        site: 'Garage / Cafeteria',
+        role: 'Defender',
+        operator: 'Denari',
+        category: 'Setup',
+        description: 'Basement Garage/Cafeteria Denari setup rehberi.',
+        link: 'https://www.instagram.com/reel/DPK5K1NDBIq/'
+    },
+    {
+        id: 'pre_58',
+        map: 'Villa',
+        floor: '2F',
+        site: 'Aviator Room / Games Room',
+        role: 'Defender',
+        operator: 'Maestro',
+        category: 'Setup',
+        description: '2F Aviator/Games Room Maestro setup.',
+        link: 'https://www.instagram.com/reel/DVtx2s1D_R0/'
+    },
+    {
+        id: 'pre_59',
+        map: 'Coastline',
+        floor: '2F',
+        site: 'Hookah Lounge / Billiards Room',
+        role: 'Defender',
+        operator: 'Azami',
+        category: 'Setup',
+        description: '2F Hookah/Billiards Azami setup rehberi.',
+        link: 'https://www.instagram.com/reel/DVsOzaSDCw4/'
+    },
+    {
+        id: 'pre_60',
+        map: 'Border',
+        floor: '2F',
+        site: 'Armory Lockers / Archives',
+        role: 'Attacker',
+        operator: 'Zero',
+        category: 'Zero Cam Trick',
+        description: '2F Armory Lockers/Archives Zero kamera trick.',
+        link: 'https://www.instagram.com/reel/DVj5PA2D2m0/'
+    },
+    {
+        id: 'pre_61',
+        map: 'Oregon',
+        floor: '2F',
+        site: "Kids' Dorms / Kitchen",
+        role: 'Defender',
+        operator: 'Fenrir',
+        category: 'Setup',
+        description: "2F/1F Kids' Dorms / Kitchen Fenrir setup rehberi.",
+        link: 'https://www.instagram.com/reel/DVPfQTdj4MQ/'
+    },
+    {
+        id: 'pre_62',
+        map: 'Oregon',
+        floor: 'B',
+        site: 'Laundry Room / Supply Room',
+        role: 'Defender',
+        operator: 'Azami',
+        category: 'Trick',
+        description: 'Basement Laundry/Supply Azami trick.',
+        link: 'https://www.instagram.com/reel/DVNdGL_AJN3/'
+    },
+    {
+        id: 'pre_63',
+        map: 'Oregon',
+        floor: '2F',
+        site: "Kids' Dorms / Bunks",
+        role: 'Attacker',
+        operator: 'Maverick & Gridlock',
+        category: 'Duo Attack',
+        description: "2F Kids' Dorms/Bunks Maverick & Gridlock duo saldırı taktiği.",
+        link: 'https://www.instagram.com/reel/DRd46jaDOWZ/'
+    },
+    {
+        id: 'pre_64',
+        map: 'Kanal',
+        floor: '2F',
+        site: 'Radar Room / Server Room',
+        role: 'Defender',
+        operator: 'Azami',
+        category: 'Setup',
+        description: '2F Radar/Server Azami setup rehberi.',
+        link: 'https://www.instagram.com/reel/DQd_IUkgBKK/'
+    },
+    {
+        id: 'pre_65',
+        map: 'Oregon',
+        floor: '2F',
+        site: "Kids' Dorms / Bunks",
+        role: 'Defender',
+        operator: 'Frost',
+        category: 'Trick',
+        description: "2F Kids' Dorms/Bunks Frost trick taktikleri.",
+        link: 'https://www.instagram.com/reel/DQd3dt7jmWE/'
+    },
+    {
+        id: 'pre_66',
+        map: 'Oregon',
+        floor: '2F',
+        site: "Kids' Dorms / Bunks",
+        role: 'Defender',
+        operator: 'Maestro',
+        category: 'Setup',
+        description: "2F Kids' Dorms/Bunks Maestro setup rehberi.",
+        link: 'https://www.instagram.com/reel/DQa5gYnDO4T/'
+    },
+    {
+        id: 'pre_67',
+        map: 'Coastline',
+        floor: '2F',
+        site: 'Hookah Lounge / Billiards Room',
+        role: 'Defender',
+        operator: 'Maestro',
+        category: 'Setup',
+        description: '2F Hookah/Billiards Maestro setup.',
+        link: 'https://www.instagram.com/reel/DWHxUizDKB8/'
+    },
+    {
+        id: 'pre_68',
+        map: 'Kafe Dostoyevsky',
+        floor: 'ANY',
+        site: 'Outside / Spawn',
+        role: 'Defender',
+        operator: 'ANY',
+        category: 'Spawn Peek',
+        description: 'Kafe Dostoyevsky spawn peek noktaları.',
+        link: 'https://www.instagram.com/reel/DVzK9qwDLP7/'
+    },
+    {
+        id: 'pre_69',
+        map: 'Skyscraper',
+        floor: 'ANY',
+        site: 'All Sites',
+        role: 'Defender',
+        operator: 'Azami',
+        category: 'Trick',
+        description: 'Skyscraper genelinde Azami trick taktikleri.',
+        link: 'https://www.instagram.com/reel/DVmS6y5kq86/'
+    },
+    {
+        id: 'pre_70',
+        map: 'Clubhouse',
+        floor: '2F',
+        site: 'Gym / Bedroom',
+        role: 'Attacker',
+        operator: 'Zofia',
+        category: 'Trick',
+        description: '2F Gym/Bedroom Zofia saldırı trick.',
+        link: 'https://www.instagram.com/reel/DWKcqyVABv5/'
+    },
+    {
+        id: 'pre_71',
+        map: 'Clubhouse',
+        floor: '2F',
+        site: 'Gym / Bedroom',
+        role: 'Attacker',
+        operator: 'Capitão',
+        category: 'Trick',
+        description: '2F Gym/Bedroom Capitão saldırı trick.',
+        link: 'https://www.instagram.com/reel/DWH--16AHp3/'
+    },
+    {
+        id: 'pre_72',
+        map: 'Clubhouse',
+        floor: 'B',
+        site: 'Church / Arsenal Room',
+        role: 'Defender',
+        operator: 'Denari',
+        category: 'Trick',
+        description: 'Basement Church/Arsenal Denari trick.',
+        link: 'https://www.instagram.com/reel/DWFwww-gOE9/'
+    },
+    {
+        id: 'pre_73',
+        map: 'Nighthaven Labs',
+        floor: 'B',
+        site: 'Assembly / Animatronics',
+        role: 'Attacker',
+        operator: 'Buck',
+        category: 'Trick',
+        description: 'Basement Assembly/Animatronics Buck saldırı trick.',
+        link: 'https://www.instagram.com/reel/DWDGY2qgB3E/'
+    },
+    {
+        id: 'pre_74',
+        map: 'Coastline',
+        floor: '2F',
+        site: 'Hookah Lounge / Billiards Room',
+        role: 'Defender',
+        operator: 'Melusi',
+        category: 'Setup',
+        description: '2F Hookah/Billiards Melusi setup rehberi.',
+        link: 'https://www.instagram.com/reel/DV9AYBCgN2F/'
+    },
+    {
+        id: 'pre_75',
+        map: 'Oregon',
+        floor: '2F',
+        site: "Kids' Dorms / Bunks",
+        role: 'Defender',
+        operator: 'Azami',
+        category: 'Trick',
+        description: "2F Kids' Dorms/Bunks Azami trick.",
+        link: 'https://www.instagram.com/reel/DV68dVAgKI7/'
+    },
+    {
+        id: 'pre_76',
+        map: 'Clubhouse',
+        floor: '2F',
+        site: 'CCTV Room / Cash Room',
+        role: 'Attacker',
+        operator: 'Zero',
+        category: 'Zero Cam Trick',
+        description: '2F CCTV/Cash Room Zero kamera trick.',
+        link: 'https://www.instagram.com/reel/DV4d4QFgLOx/'
+    },
+    {
+        id: 'pre_77',
+        map: 'Coastline',
+        floor: 'ANY',
+        site: 'All Sites',
+        role: 'Attacker',
+        operator: 'ANY',
+        category: 'Grenade Lineup',
+        description: 'Coastline genel grenade lineup taktikleri.',
+        link: 'https://www.instagram.com/reel/DVr3HBKgHg6/'
     }
 ];
 
-const DATA_VERSION = 2;
+const DATA_VERSION = 3;
 
 // ===== APP STATE =====
 let tactics = [];
@@ -1123,7 +1356,9 @@ function getCategoryColor(category) {
         'Impact Grenade Trick': '#ff8a65',
         'Grenade Trick': '#dce775',
         'Thermite Trick': '#ff5722',
-        'Zero Cam Trick': '#00bcd4'
+        'Zero Cam Trick': '#00bcd4',
+        'Duo Attack': '#ba68c8',
+        'Grenade Lineup': '#aed581'
     };
     return colors[category] || '#ffa726';
 }

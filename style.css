@@ -682,6 +682,18 @@ body::before {
     border-color: rgba(0, 188, 212, 0.25);
 }
 
+.tag-category[data-category="Duo Attack"] {
+    background: rgba(186, 104, 200, 0.12);
+    color: #ba68c8;
+    border-color: rgba(186, 104, 200, 0.25);
+}
+
+.tag-category[data-category="Grenade Lineup"] {
+    background: rgba(174, 213, 129, 0.12);
+    color: #aed581;
+    border-color: rgba(174, 213, 129, 0.25);
+}
+
 .card-description {
     font-size: 0.82rem;
     color: var(--text-secondary);
