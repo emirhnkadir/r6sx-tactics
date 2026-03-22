@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="Rainbow Six Siege taktik kütüphanesi - harita, operatör ve site bazında taktik videolarını kaydet ve filtrele">
+    <meta name="description" content="Rainbow Six Siege tactics library - save and filter tactic videos by map, operator, and site">
     <meta name="theme-color" content="#0f1210">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -30,19 +30,19 @@
                 </div>
                 <div class="logo-text">
                     <h1>R6SX TACTICS</h1>
-                    <span class="logo-subtitle">Taktik Kütüphanesi</span>
+                    <span class="logo-subtitle">Tactics Library</span>
                 </div>
             </div>
             <div class="header-actions">
-                <button class="btn-icon" id="btnImport" title="İçe Aktar">
+                <button class="btn-icon" id="btnImport" title="Import">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </button>
-                <button class="btn-icon" id="btnExport" title="Dışa Aktar">
+                <button class="btn-icon" id="btnExport" title="Export">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </button>
                 <button class="btn-primary" id="btnAdd">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    <span>Ekle</span>
+                    <span>Add</span>
                 </button>
             </div>
         </div>
@@ -52,7 +52,7 @@
     <section class="filters-section">
         <div class="search-bar">
             <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" placeholder="Taktik ara... (harita, operatör, açıklama)">
+            <input type="text" id="searchInput" placeholder="Search tactics... (map, operator, description)">
             <button class="search-clear hidden" id="searchClear">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -60,22 +60,22 @@
         <div class="filter-chips">
             <div class="filter-group">
                 <select id="filterMap" class="filter-select">
-                    <option value="">🗺️ Tüm Haritalar</option>
+                    <option value="">🗺️ All Maps</option>
                 </select>
             </div>
             <div class="filter-group">
                 <select id="filterOperator" class="filter-select">
-                    <option value="">👤 Tüm Operatörler</option>
+                    <option value="">👤 All Operators</option>
                 </select>
             </div>
             <div class="filter-group">
                 <select id="filterCategory" class="filter-select">
-                    <option value="">🏷️ Tüm Kategoriler</option>
+                    <option value="">🏷️ All Categories</option>
                 </select>
             </div>
             <div class="filter-group">
                 <select id="filterFloor" class="filter-select">
-                    <option value="">🏢 Tüm Katlar</option>
+                    <option value="">🏢 All Floors</option>
                     <option value="B">B (Basement)</option>
                     <option value="1F">1F</option>
                     <option value="2F">2F</option>
@@ -84,14 +84,14 @@
             </div>
             <div class="filter-group">
                 <select id="filterRole" class="filter-select">
-                    <option value="">⚔️ Tüm Roller</option>
+                    <option value="">⚔️ All Roles</option>
                     <option value="Defender">🛡️ Defender</option>
                     <option value="Attacker">⚔️ Attacker</option>
                 </select>
             </div>
             <button class="filter-reset hidden" id="filterReset">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                Filtreleri Temizle
+                Clear Filters
             </button>
         </div>
         <div class="results-count" id="resultsCount"></div>
@@ -107,15 +107,15 @@
         <div class="empty-icon">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 2L36 11V29L20 38L4 29V11L20 2Z" transform="scale(0.5) translate(4,4)"/><circle cx="12" cy="12" r="8" opacity="0.3"/><line x1="8" y1="12" x2="16" y2="12" stroke-width="1.5" opacity="0.5"/></svg>
         </div>
-        <h3 id="emptyTitle">Henüz taktik yok</h3>
-        <p id="emptyMessage">İlk taktiğini eklemek için yukarıdaki "Ekle" butonuna tıkla!</p>
+        <h3 id="emptyTitle">No tactics yet</h3>
+        <p id="emptyMessage">Click the "Add" button above to add your first tactic!</p>
     </div>
 
     <!-- Add/Edit Modal -->
     <div class="modal-overlay hidden" id="modalOverlay">
         <div class="modal" id="tacticModal">
             <div class="modal-header">
-                <h2 id="modalTitle">Yeni Taktik Ekle</h2>
+                <h2 id="modalTitle">Add New Tactic</h2>
                 <button class="btn-icon modal-close" id="modalClose">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
@@ -123,21 +123,21 @@
             <form id="tacticForm" class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="inputMap">Harita *</label>
+                        <label for="inputMap">Map *</label>
                         <select id="inputMap" required>
-                            <option value="">Harita seç...</option>
+                            <option value="">Select map...</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="inputCategory">Kategori *</label>
+                        <label for="inputCategory">Category *</label>
                         <select id="inputCategory" required>
-                            <option value="">Kategori seç...</option>
+                            <option value="">Select category...</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="inputFloor">Kat</label>
+                        <label for="inputFloor">Floor</label>
                         <select id="inputFloor">
                             <option value="ANY">ANY</option>
                             <option value="B">B (Basement)</option>
@@ -147,7 +147,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="inputRole">Rol</label>
+                        <label for="inputRole">Role</label>
                         <select id="inputRole">
                             <option value="Defender">🛡️ Defender</option>
                             <option value="Attacker">⚔️ Attacker</option>
@@ -155,29 +155,29 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputSite">Bölge / Site</label>
-                    <input type="text" id="inputSite" placeholder="Örn: Armory / Archives">
+                    <label for="inputSite">Site / Room</label>
+                    <input type="text" id="inputSite" placeholder="e.g. Armory / Archives">
                 </div>
                 <div class="form-group">
-                    <label for="inputOperator">Operatör</label>
+                    <label for="inputOperator">Operator</label>
                     <select id="inputOperator">
-                        <option value="">Operatör seç (opsiyonel)...</option>
-                        <option value="Genel">Genel</option>
+                        <option value="">Select operator (optional)...</option>
+                        <option value="Genel">General</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="inputDescription">Açıklama / Notlar</label>
-                    <textarea id="inputDescription" rows="3" placeholder="Taktik hakkında kısa notlar..."></textarea>
+                    <label for="inputDescription">Description / Notes</label>
+                    <textarea id="inputDescription" rows="3" placeholder="Short notes about the tactic..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="inputLink">Video Linki *</label>
-                    <input type="url" id="inputLink" placeholder="https://instagram.com/reel/... veya youtube.com/..." required>
+                    <label for="inputLink">Video Link *</label>
+                    <input type="url" id="inputLink" placeholder="https://instagram.com/reel/... or youtube.com/..." required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-secondary" id="btnCancel">İptal</button>
+                    <button type="button" class="btn-secondary" id="btnCancel">Cancel</button>
                     <button type="submit" class="btn-primary btn-wide">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span id="btnSubmitText">Kaydet</span>
+                        <span id="btnSubmitText">Save</span>
                     </button>
                 </div>
             </form>
@@ -188,16 +188,16 @@
     <div class="modal-overlay hidden" id="deleteOverlay">
         <div class="modal modal-small">
             <div class="modal-header">
-                <h2>Taktiği Sil</h2>
+                <h2>Delete Tactic</h2>
             </div>
             <div class="modal-body">
-                <p class="delete-message">Bu taktiği silmek istediğinden emin misin? Bu işlem geri alınamaz.</p>
+                <p class="delete-message">Are you sure you want to delete this tactic? This action cannot be undone.</p>
                 <div class="delete-preview" id="deletePreview"></div>
                 <div class="form-actions">
-                    <button class="btn-secondary" id="btnDeleteCancel">İptal</button>
+                    <button class="btn-secondary" id="btnDeleteCancel">Cancel</button>
                     <button class="btn-danger" id="btnDeleteConfirm">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-                        Sil
+                        Delete
                     </button>
                 </div>
             </div>
@@ -208,17 +208,17 @@
     <div class="modal-overlay hidden" id="importOverlay">
         <div class="modal modal-small">
             <div class="modal-header">
-                <h2>Veri İçe Aktar</h2>
+                <h2>Import Data</h2>
                 <button class="btn-icon modal-close" id="importClose">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Daha önce dışa aktardığın JSON dosyasını seç:</p>
+                <p>Select a previously exported JSON file:</p>
                 <input type="file" id="importFile" accept=".json" class="file-input">
                 <div class="form-actions">
-                    <button class="btn-secondary" id="btnImportCancel">İptal</button>
-                    <button class="btn-primary" id="btnImportConfirm">İçe Aktar</button>
+                    <button class="btn-secondary" id="btnImportCancel">Cancel</button>
+                    <button class="btn-primary" id="btnImportConfirm">Import</button>
                 </div>
             </div>
         </div>

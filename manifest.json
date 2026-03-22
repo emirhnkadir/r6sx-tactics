@@ -1,7 +1,7 @@
 {
     "name": "R6SX Tactics Hub",
     "short_name": "R6SX Tactics",
-    "description": "Rainbow Six Siege X - Taktik Kütüphanesi",
+    "description": "Rainbow Six Siege X - Tactics Library",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#0f1210",

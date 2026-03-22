@@ -1,4 +1,4 @@
-// ===== R6S DATA =====
+﻿// ===== R6S DATA =====
 const R6S_MAPS = [
     'Bank', 'Border', 'Chalet', 'Clubhouse', 'Coastline', 'Consulate',
     'Emerald Plains', 'Kafe Dostoyevsky', 'Kanal', 'Lair', 'Nighthaven Labs',
@@ -125,7 +125,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: 'CEO bölgesi için Denari setup rehberi.',
+        description: 'CEO bölgesi for Denari setup guide.',
         link: 'https://www.instagram.com/reel/DRdx7EiDDNg/'
     },
     {
@@ -136,7 +136,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F bölgesi için temel site kurulumu (reinforce ve rotasyonlar).',
+        description: '2F bölgesi for temel site kurulumu (reinforce ve rotasyonlar).',
         link: 'https://www.instagram.com/reel/DUHe0iAD5aV/'
     },
     {
@@ -147,7 +147,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: 'Basement için reinforce noktaları ve rotasyon rehberi.',
+        description: 'Basement for reinforce noktaları ve rotasyon rehberi.',
         link: 'https://www.instagram.com/reel/DUHfrj3DCD9/'
     },
     {
@@ -158,7 +158,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Trick',
-        description: 'Clubhouse genelinde farklı siteler için Fenrir taktikleri ve cihaz yerleşimleri.',
+        description: 'Clubhouse on farklı siteler for Fenrir taktikleri and device placements.',
         link: 'https://www.instagram.com/reel/DUgWZNzEnxM/'
     },
     {
@@ -169,7 +169,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: 'Basement Laundry/Supply için Azami trick taktikleri.',
+        description: 'Basement Laundry/Supply for Azami trick tactics.',
         link: 'https://www.instagram.com/reel/DPSV-logPDa/'
     },
     {
@@ -180,7 +180,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F Radar/Server için site kurulum rehberi.',
+        description: '2F Radar/Server for site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUjp6ANFOga/'
     },
     {
@@ -235,7 +235,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Castle',
         category: 'Setup',
-        description: '1F Kitchen/Service için Castle setup rehberi.',
+        description: '1F Kitchen/Service for Castle setup guide.',
         link: 'https://www.instagram.com/reel/DUEl1dxjyOJ/'
     },
     {
@@ -246,7 +246,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '1F Kitchen/Bakery için Azami setup rehberi.',
+        description: '1F Kitchen/Bakery for Azami setup guide.',
         link: 'https://www.instagram.com/reel/DUElVoXEY0w/'
     },
     {
@@ -268,7 +268,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '1F Kitchen/Service genel site kurulum rehberi.',
+        description: '1F Kitchen/Service general site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUCF8Hpj3ko/'
     },
     {
@@ -279,7 +279,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Setup',
-        description: '2F CEO Office genel site kurulum rehberi.',
+        description: '2F CEO Office general site kurulum rehberi.',
         link: 'https://www.instagram.com/reel/DUCE5gZj8sH/'
     },
     {
@@ -356,7 +356,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Trick',
-        description: 'Basement Wine Cellar/Snowmobile için Denari trick taktikleri.',
+        description: 'Basement Wine Cellar/Snowmobile for Denari trick tactics.',
         link: 'https://www.instagram.com/reel/DT6VF1egm_N/'
     },
     {
@@ -367,7 +367,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: '2F Armory Lockers/Archives için Azami trick taktikleri.',
+        description: '2F Armory Lockers/Archives for Azami trick tactics.',
         link: 'https://www.instagram.com/reel/DVo4A8kgs79/'
     },
     {
@@ -378,7 +378,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Nomad',
         category: 'Trick',
-        description: 'Bank genelinde Nomad saldırı taktikleri.',
+        description: 'Bank on Nomad attack tactics.',
         link: 'https://www.instagram.com/reel/DVOffFHgoaK/'
     },
     {
@@ -389,7 +389,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Maverick',
         category: 'Trick',
-        description: '2F CCTV/Cash Room için Maverick saldırı taktikleri.',
+        description: '2F CCTV/Cash Room for Maverick attack tactics.',
         link: 'https://www.instagram.com/reel/DVJ42bkgrOy/'
     },
     {
@@ -400,7 +400,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Trick',
-        description: 'Tüm haritalarda genel Fenrir trick taktikleri ve cihaz yerleşimleri.',
+        description: 'On all maps general Fenrir trick taktikleri and device placements.',
         link: 'https://www.instagram.com/reel/DUya9MfDF2Z/'
     },
     {
@@ -411,7 +411,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Trick',
-        description: '2F Aviator/Games Room için Denari trick taktikleri.',
+        description: '2F Aviator/Games Room for Denari trick tactics.',
         link: 'https://www.instagram.com/reel/DUv3VfjjBpU/'
     },
     {
@@ -422,7 +422,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Spawn Peek',
-        description: 'Oregon spawn peek noktaları.',
+        description: 'Oregon spawn peek spots.',
         link: 'https://www.instagram.com/reel/DUtRa_PDB4_/'
     },
     {
@@ -433,7 +433,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Spawn Peek',
-        description: 'Chalet spawn peek noktaları.',
+        description: 'Chalet spawn peek spots.',
         link: 'https://www.instagram.com/reel/DUs1773jNjp/'
     },
     {
@@ -444,7 +444,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Valkyrie',
         category: 'Trick',
-        description: 'Tüm haritalarda Valkyrie kamera taktikleri ve trick noktaları.',
+        description: 'On all maps Valkyrie camera tactics and trick spots.',
         link: 'https://www.instagram.com/reel/DUqValeDFI0/'
     },
     {
@@ -455,7 +455,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'ANY',
         category: 'Claymore Trick',
-        description: 'Tüm haritalarda genel claymore trick taktikleri.',
+        description: 'On all maps general claymore trick tactics.',
         link: 'https://www.instagram.com/reel/DUaabQMgvww/'
     },
     // ===== NEW TACTICS (v2) =====
@@ -467,7 +467,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Impact Grenade Trick',
-        description: 'Basement Church/Arsenal impact grenade trick taktikleri.',
+        description: 'Basement Church/Arsenal impact grenade trick tactics.',
         link: 'https://www.instagram.com/reel/DUTJtdjgkw0/'
     },
     {
@@ -478,7 +478,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Sledge',
         category: 'Grenade Trick',
-        description: 'Tüm haritalarda Sledge grenade trick taktikleri.',
+        description: 'On all maps Sledge grenade trick tactics.',
         link: 'https://www.instagram.com/reel/DUOkOE2Al9h/'
     },
     {
@@ -489,7 +489,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Thermite',
         category: 'Thermite Trick',
-        description: '1F Kitchen/Service Entrance için Thermite trick.',
+        description: '1F Kitchen/Service Entrance for Thermite trick.',
         link: 'https://www.instagram.com/reel/DUOVpdZghv6/'
     },
     {
@@ -500,7 +500,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Spawn Peek',
-        description: 'Outback Azami spawn peek taktikleri.',
+        description: 'Outback Azami spawn peek tactics.',
         link: 'https://www.instagram.com/reel/DT5VNx7AikW/'
     },
     {
@@ -533,7 +533,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Trophy/Statuary Room Maestro setup rehberi.',
+        description: '2F Trophy/Statuary Room Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DVADBPxgN4I/'
     },
     {
@@ -555,7 +555,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Hookah/Billiards Maestro setup rehberi.',
+        description: '2F Hookah/Billiards Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DU4isjZAPAv/'
     },
     {
@@ -566,7 +566,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F CEO Office Zero kamera yerleşim taktikleri.',
+        description: '2F CEO Office Zero camera placement tactics.',
         link: 'https://www.instagram.com/reel/DTDKdS1gJ7e/'
     },
     {
@@ -577,7 +577,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Echo',
         category: 'Trick',
-        description: '2F CCTV/Cash Room Echo trick taktikleri.',
+        description: '2F CCTV/Cash Room Echo trick tactics.',
         link: 'https://www.instagram.com/reel/DTAlsutAEvx/'
     },
     {
@@ -588,7 +588,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Trick',
-        description: 'Basement Wine Cellar/Snowmobile Zero saldırı trick.',
+        description: 'Basement Wine Cellar/Snowmobile Zero attack trick.',
         link: 'https://www.instagram.com/reel/DS9zIv5AJUe/'
     },
     {
@@ -599,7 +599,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Trick',
-        description: '2F Armory Lockers/Archives Zero saldırı trick.',
+        description: '2F Armory Lockers/Archives Zero attack trick.',
         link: 'https://www.instagram.com/reel/DS7OZ0yAPM_/'
     },
     {
@@ -610,7 +610,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '1F Kitchen/Service Azami setup rehberi.',
+        description: '1F Kitchen/Service Azami setup guide.',
         link: 'https://www.instagram.com/reel/DSWW_eSgO84/'
     },
     {
@@ -632,7 +632,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: 'Basement CCTV/Lockers Maestro setup rehberi.',
+        description: 'Basement CCTV/Lockers Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DSRTkylgPLt/'
     },
     {
@@ -643,7 +643,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Mute',
         category: 'Setup',
-        description: '3F Bar/Cocktail Lounge Mute setup rehberi.',
+        description: '3F Bar/Cocktail Lounge Mute setup guide.',
         link: 'https://www.instagram.com/reel/DQ-v48UADUD/'
     },
     {
@@ -654,7 +654,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: '2F Aviator/Games Room Maestro setup rehberi.',
+        description: '2F Aviator/Games Room Maestro setup guide.',
         link: 'https://www.instagram.com/reel/DQ5uyUaANPF/'
     },
     {
@@ -665,7 +665,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks Fenrir setup rehberi.",
+        description: "2F Kids' Dorms/Bunks Fenrir setup guide.",
         link: 'https://www.instagram.com/reel/DQqXcGNgPMt/'
     },
     {
@@ -676,7 +676,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks Denari setup rehberi.",
+        description: "2F Kids' Dorms/Bunks Denari setup guide.",
         link: 'https://www.instagram.com/reel/DWAWFJYADxn/'
     },
     {
@@ -687,7 +687,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '2F CCTV/Cash Room Azami setup rehberi.',
+        description: '2F CCTV/Cash Room Azami setup guide.',
         link: 'https://www.instagram.com/reel/DWAC-V9jUfJ/'
     },
     {
@@ -698,7 +698,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: '2F Master Bedroom/Office Denari setup rehberi.',
+        description: '2F Master Bedroom/Office Denari setup guide.',
         link: 'https://www.instagram.com/reel/DV_8wL0iGbd/'
     },
     {
@@ -709,7 +709,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Trick',
-        description: "2F Kids' Dorms/Bunks Maestro trick taktikleri.",
+        description: "2F Kids' Dorms/Bunks Maestro trick tactics.",
         link: 'https://www.instagram.com/reel/DVsHMT4DL_c/'
     },
     {
@@ -731,7 +731,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F CCTV/Cash Room Zero kamera yerleşim taktikleri.',
+        description: '2F CCTV/Cash Room Zero camera placement tactics.',
         link: 'https://www.instagram.com/reel/DVO4fSsDTOT/'
     },
     // ===== NEW TACTICS (v3) =====
@@ -743,7 +743,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Denari',
         category: 'Setup',
-        description: 'Basement Garage/Cafeteria Denari setup rehberi.',
+        description: 'Basement Garage/Cafeteria Denari setup guide.',
         link: 'https://www.instagram.com/reel/DPK5K1NDBIq/'
     },
     {
@@ -765,7 +765,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '2F Hookah/Billiards Azami setup rehberi.',
+        description: '2F Hookah/Billiards Azami setup guide.',
         link: 'https://www.instagram.com/reel/DVsOzaSDCw4/'
     },
     {
@@ -776,7 +776,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F Armory Lockers/Archives Zero kamera trick.',
+        description: '2F Armory Lockers/Archives Zero camera trick.',
         link: 'https://www.instagram.com/reel/DVj5PA2D2m0/'
     },
     {
@@ -787,7 +787,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Fenrir',
         category: 'Setup',
-        description: "2F/1F Kids' Dorms / Kitchen Fenrir setup rehberi.",
+        description: "2F/1F Kids' Dorms / Kitchen Fenrir setup guide.",
         link: 'https://www.instagram.com/reel/DVPfQTdj4MQ/'
     },
     {
@@ -809,7 +809,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Maverick & Gridlock',
         category: 'Duo Attack',
-        description: "2F Kids' Dorms/Bunks Maverick & Gridlock duo saldırı taktiği.",
+        description: "2F Kids' Dorms/Bunks Maverick & Gridlock duo attack tactic.",
         link: 'https://www.instagram.com/reel/DRd46jaDOWZ/'
     },
     {
@@ -820,7 +820,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Setup',
-        description: '2F Radar/Server Azami setup rehberi.',
+        description: '2F Radar/Server Azami setup guide.',
         link: 'https://www.instagram.com/reel/DQd_IUkgBKK/'
     },
     {
@@ -831,7 +831,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Frost',
         category: 'Trick',
-        description: "2F Kids' Dorms/Bunks Frost trick taktikleri.",
+        description: "2F Kids' Dorms/Bunks Frost trick tactics.",
         link: 'https://www.instagram.com/reel/DQd3dt7jmWE/'
     },
     {
@@ -842,7 +842,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Maestro',
         category: 'Setup',
-        description: "2F Kids' Dorms/Bunks Maestro setup rehberi.",
+        description: "2F Kids' Dorms/Bunks Maestro setup guide.",
         link: 'https://www.instagram.com/reel/DQa5gYnDO4T/'
     },
     {
@@ -864,7 +864,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'ANY',
         category: 'Spawn Peek',
-        description: 'Kafe Dostoyevsky spawn peek noktaları.',
+        description: 'Kafe Dostoyevsky spawn peek spots.',
         link: 'https://www.instagram.com/reel/DVzK9qwDLP7/'
     },
     {
@@ -875,7 +875,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Azami',
         category: 'Trick',
-        description: 'Skyscraper genelinde Azami trick taktikleri.',
+        description: 'Skyscraper on Azami trick tactics.',
         link: 'https://www.instagram.com/reel/DVmS6y5kq86/'
     },
     {
@@ -886,7 +886,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zofia',
         category: 'Trick',
-        description: '2F Gym/Bedroom Zofia saldırı trick.',
+        description: '2F Gym/Bedroom Zofia attack trick.',
         link: 'https://www.instagram.com/reel/DWKcqyVABv5/'
     },
     {
@@ -897,7 +897,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Capitão',
         category: 'Trick',
-        description: '2F Gym/Bedroom Capitão saldırı trick.',
+        description: '2F Gym/Bedroom Capitão attack trick.',
         link: 'https://www.instagram.com/reel/DWH--16AHp3/'
     },
     {
@@ -919,7 +919,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Buck',
         category: 'Trick',
-        description: 'Basement Assembly/Animatronics Buck saldırı trick.',
+        description: 'Basement Assembly/Animatronics Buck attack trick.',
         link: 'https://www.instagram.com/reel/DWDGY2qgB3E/'
     },
     {
@@ -930,7 +930,7 @@ const DEFAULT_TACTICS = [
         role: 'Defender',
         operator: 'Melusi',
         category: 'Setup',
-        description: '2F Hookah/Billiards Melusi setup rehberi.',
+        description: '2F Hookah/Billiards Melusi setup guide.',
         link: 'https://www.instagram.com/reel/DV9AYBCgN2F/'
     },
     {
@@ -952,7 +952,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'Zero',
         category: 'Zero Cam Trick',
-        description: '2F CCTV/Cash Room Zero kamera trick.',
+        description: '2F CCTV/Cash Room Zero camera trick.',
         link: 'https://www.instagram.com/reel/DV4d4QFgLOx/'
     },
     {
@@ -963,7 +963,7 @@ const DEFAULT_TACTICS = [
         role: 'Attacker',
         operator: 'ANY',
         category: 'Grenade Lineup',
-        description: 'Coastline genel grenade lineup taktikleri.',
+        description: 'Coastline general grenade lineup tactics.',
         link: 'https://www.instagram.com/reel/DVr3HBKgHg6/'
     }
 ];
@@ -1083,7 +1083,7 @@ function populateFilterDropdowns() {
     if (usedMaps.includes('ANY')) {
         const opt = document.createElement('option');
         opt.value = 'ANY';
-        opt.textContent = 'ANY (Genel)';
+        opt.textContent = 'ANY (general)';
         dom.filterMap.appendChild(opt);
     }
 
@@ -1102,7 +1102,7 @@ function populateFilterDropdowns() {
     // Add ANY option
     const optAny = document.createElement('option');
     optAny.value = 'ANY';
-    optAny.textContent = 'ANY (Genel)';
+    optAny.textContent = 'ANY (general)';
     dom.filterOperator.appendChild(optAny);
 
     // Categories
@@ -1124,7 +1124,7 @@ function populateFormDropdowns() {
     });
     const anyMapOpt = document.createElement('option');
     anyMapOpt.value = 'ANY';
-    anyMapOpt.textContent = 'ANY (Tüm Haritalar)';
+    anyMapOpt.textContent = 'ANY (All maps)';
     dom.inputMap.appendChild(anyMapOpt);
 
     // Categories for form
@@ -1137,7 +1137,7 @@ function populateFormDropdowns() {
 
     // Operators for form
     const optGroupDef = document.createElement('optgroup');
-    optGroupDef.label = '🛡️ Savunma';
+    optGroupDef.label = '🛡️ Defense';
     R6S_OPERATORS.defenders.sort().forEach(op => {
         const opt = document.createElement('option');
         opt.value = op;
@@ -1146,7 +1146,7 @@ function populateFormDropdowns() {
     });
 
     const optGroupAtk = document.createElement('optgroup');
-    optGroupAtk.label = '⚔️ Saldırı';
+    optGroupAtk.label = '⚔️ Attack';
     R6S_OPERATORS.attackers.sort().forEach(op => {
         const opt = document.createElement('option');
         opt.value = op;
@@ -1156,7 +1156,7 @@ function populateFormDropdowns() {
 
     const optAny = document.createElement('option');
     optAny.value = 'ANY';
-    optAny.textContent = 'ANY (Genel)';
+    optAny.textContent = 'ANY (general)';
     dom.inputOperator.appendChild(optAny);
     dom.inputOperator.appendChild(optGroupDef);
     dom.inputOperator.appendChild(optGroupAtk);
@@ -1271,14 +1271,14 @@ function renderTactics() {
     const filtered = getFilteredTactics();
 
     // Update count
-    dom.resultsCount.textContent = `${filtered.length} / ${tactics.length} taktik gösteriliyor`;
+    dom.resultsCount.textContent = `${filtered.length} / ${tactics.length} tactics showing`;
 
     // Empty state
     if (tactics.length === 0) {
         dom.grid.classList.add('hidden');
         dom.emptyState.classList.remove('hidden');
-        dom.emptyTitle.textContent = 'Henüz taktik yok';
-        dom.emptyMessage.textContent = 'İlk taktiğini eklemek için yukarıdaki "Ekle" butonuna tıkla!';
+        dom.emptyTitle.textContent = 'No tactics yet';
+        dom.emptyMessage.textContent = 'İlk taktiğini eklemek for yukarıdaki "Ekle" butonuna tıkla!';
         return;
     }
 
@@ -1438,12 +1438,12 @@ function handleFormSubmit(e) {
         const idx = tactics.findIndex(t => t.id === editingId);
         if (idx !== -1) {
             tactics[idx] = { ...tactics[idx], ...data };
-            showToast('Taktik güncellendi! ✅', 'success');
+            showToast('Tactic updated! ✅', 'success');
         }
     } else {
         data.id = generateId();
         tactics.unshift(data);
-        showToast('Yeni taktik eklendi! 🎯', 'success');
+        showToast('New tactic added! 🎯', 'success');
     }
 
     saveTactics();
@@ -1459,7 +1459,7 @@ function detectFloor(site) {
 }
 
 function detectRole(operator) {
-    if (!operator || operator === 'ANY' || operator === 'Genel') return 'Defender';
+    if (!operator || operator === 'ANY' || operator === 'general') return 'Defender';
     if (R6S_OPERATORS.attackers.includes(operator)) return 'Attacker';
     return 'Defender';
 }
@@ -1470,7 +1470,7 @@ function openDeleteModal(id) {
     const tactic = tactics.find(t => t.id === id);
     if (!tactic) return;
 
-    dom.deletePreview.innerHTML = `<strong>${escapeHtml(tactic.map)}</strong> — ${escapeHtml(tactic.site || 'Genel')} ${tactic.operator !== 'ANY' ? `(${escapeHtml(tactic.operator)})` : ''}`;
+    dom.deletePreview.innerHTML = `<strong>${escapeHtml(tactic.map)}</strong> — ${escapeHtml(tactic.site || 'general')} ${tactic.operator !== 'ANY' ? `(${escapeHtml(tactic.operator)})` : ''}`;
     dom.deleteOverlay.classList.remove('hidden');
 }
 
@@ -1485,7 +1485,7 @@ function confirmDelete() {
     saveTactics();
     closeDeleteModal();
     renderTactics();
-    showToast('Taktik silindi 🗑️', 'error');
+    showToast('Tactic deleted 🗑️', 'error');
 }
 
 // ===== IMPORT / EXPORT =====
@@ -1530,7 +1530,7 @@ function importData() {
             saveTactics();
             dom.importOverlay.classList.add('hidden');
             renderTactics();
-            showToast(`${data.length} taktik içe aktarıldı! ✅`, 'success');
+            showToast(`${data.length} tactics imported! ✅`, 'success');
         } catch (err) {
             showToast('Dosya okunamadı! Geçerli bir JSON dosyası seç.', 'error');
         }
