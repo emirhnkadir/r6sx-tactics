@@ -22,7 +22,7 @@
     --danger-hover: #f44336;
     --success: #66bb6a;
 
-    --category-setup: #42a5f5;
+    --category-setup: #fbc02d;
     --category-trick: #ab47bc;
     --category-anchor: #66bb6a;
     --category-roam: #ffa726;
@@ -605,9 +605,9 @@ body::before {
 }
 
 .tag-category[data-category="Setup"] {
-    background: rgba(66, 165, 245, 0.12);
+    background: rgba(251, 192, 45, 0.12);
     color: var(--category-setup);
-    border-color: rgba(66, 165, 245, 0.25);
+    border-color: rgba(251, 192, 45, 0.25);
 }
 
 .tag-category[data-category="Trick"] {

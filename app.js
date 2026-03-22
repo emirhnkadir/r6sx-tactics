@@ -1264,7 +1264,7 @@ function detectPlatform(url) {
 
 function getCategoryColor(category) {
     const colors = {
-        'Setup': '#42a5f5',
+        'Setup': '#fbc02d',
         'Trick': '#ab47bc',
         'Anchor': '#66bb6a',
         'Roam': '#ffa726',
