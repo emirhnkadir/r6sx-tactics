@@ -1200,20 +1200,34 @@ function renderTactics() {
         dom.grid.classList.add('hidden');
         dom.emptyState.classList.remove('hidden');
         dom.emptyTitle.textContent = 'No tactics yet';
-        dom.emptyMessage.textContent = 'İlk taktiğini eklemek for yukarıdaki "Ekle" butonuna tıkla!';
+        dom.emptyMessage.textContent = 'Click the "Add" button above to add your first tactic!';
         return;
     }
 
     if (filtered.length === 0) {
         dom.grid.classList.add('hidden');
         dom.emptyState.classList.remove('hidden');
-        dom.emptyTitle.textContent = 'Sonuç bulunamadı';
-        dom.emptyMessage.textContent = 'Filtrelerini değiştirmeyi veya arama terimini güncellemeyi dene.';
+        dom.emptyTitle.textContent = 'No results found';
+        dom.emptyMessage.textContent = 'Try changing your filters or updating your search term.';
         return;
     }
 
     dom.emptyState.classList.add('hidden');
     dom.grid.classList.remove('hidden');
+
+    filtered.sort((a, b) => {
+        const mapA = (a.map || '').toUpperCase() === 'ANY' ? '' : (a.map || '').toUpperCase();
+        const mapB = (b.map || '').toUpperCase() === 'ANY' ? '' : (b.map || '').toUpperCase();
+        
+        if (mapA !== mapB) {
+            return mapA.localeCompare(mapB);
+        }
+
+        const opA = (a.operator || '').toUpperCase() === 'ANY' || (a.operator || '').toUpperCase() === 'GENERAL' ? '' : (a.operator || '').toUpperCase();
+        const opB = (b.operator || '').toUpperCase() === 'ANY' || (b.operator || '').toUpperCase() === 'GENERAL' ? '' : (b.operator || '').toUpperCase();
+        
+        return opA.localeCompare(opB);
+    });
 
     dom.grid.innerHTML = filtered.map((t, i) => {
         const platform = detectPlatform(t.link);
