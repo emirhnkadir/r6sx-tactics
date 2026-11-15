@@ -897,6 +897,8 @@ const DATA_VERSION = 3;
 let tactics = [];
 let editingId = null;
 let deleteTargetId = null;
+let isMatchMode = false;
+let videoZoomLevel = 0;
 
 // ===== DOM REFS =====
 const $ = (sel) => document.querySelector(sel);
@@ -932,7 +934,28 @@ const dom = {
     importOverlay: $('#importOverlay'),
     importFile: $('#importFile'),
     toast: $('#toast'),
-    toastMessage: $('#toastMessage')
+    toastMessage: $('#toastMessage'),
+    // Match Mode DOM elements
+    matchModeContainer: $('#matchModeContainer'),
+    matchModeToggle: $('#matchModeToggle'),
+    matchModePanel: $('#matchModePanel'),
+    matchModeBadge: $('#matchModeBadge'),
+    matchModeDot: $('#matchModeDot'),
+    matchMapSelect: $('#matchMapSelect'),
+    matchRoleSegmented: $('#matchRoleSegmented'),
+    matchFloorSegmented: $('#matchFloorSegmented'),
+    btnFloor3F: $('#btnFloor3F'),
+    // Video Player Modal DOM elements
+    videoModalOverlay: $('#videoModalOverlay'),
+    videoModal: $('#videoModal'),
+    videoModalTitle: $('#videoModalTitle'),
+    videoModalMeta: $('#videoModalMeta'),
+    videoZoomBtn: $('#videoZoomBtn'),
+    videoZoomText: $('#videoZoomText'),
+    videoFallbackBtn: $('#videoFallbackBtn'),
+    videoFallbackText: $('#videoFallbackText'),
+    videoModalClose: $('#videoModalClose'),
+    videoPlayerContainer: $('#videoPlayerContainer')
 };
 
 // ===== INIT =====
@@ -941,6 +964,13 @@ function init() {
     populateFilterDropdowns();
     populateFormDropdowns();
     bindEvents();
+
+    isMatchMode = localStorage.getItem('r6s_match_mode') === 'true';
+    if (dom.matchModeToggle) {
+        dom.matchModeToggle.checked = isMatchMode;
+    }
+    updateMatchModeUI();
+    syncFilterUI();
     renderTactics();
 }
 
@@ -987,26 +1017,39 @@ function generateId() {
 function populateFilterDropdowns() {
     // Maps
     const usedMaps = [...new Set(tactics.map(t => t.map))].sort();
-    R6S_MAPS.forEach(map => {
+
+    dom.filterMap.innerHTML = '<option value="">🗺️ All Maps</option>';
+    if (dom.matchMapSelect) {
+        dom.matchMapSelect.innerHTML = '<option value="">🗺️ All Maps (Unlocked)</option>';
+    }
+
+    const addMapOpt = (mapVal, textVal) => {
         const opt = document.createElement('option');
-        opt.value = map;
-        opt.textContent = map;
+        opt.value = mapVal;
+        opt.textContent = textVal || mapVal;
         dom.filterMap.appendChild(opt);
+
+        if (dom.matchMapSelect) {
+            const matchOpt = document.createElement('option');
+            matchOpt.value = mapVal;
+            matchOpt.textContent = textVal || mapVal;
+            dom.matchMapSelect.appendChild(matchOpt);
+        }
+    };
+
+    R6S_MAPS.forEach(map => {
+        addMapOpt(map);
     });
+
     // Add any map in tactics not in R6S_MAPS
     usedMaps.forEach(map => {
         if (map !== 'ANY' && !R6S_MAPS.includes(map)) {
-            const opt = document.createElement('option');
-            opt.value = map;
-            opt.textContent = map;
-            dom.filterMap.appendChild(opt);
+            addMapOpt(map);
         }
     });
+
     if (usedMaps.includes('ANY')) {
-        const opt = document.createElement('option');
-        opt.value = 'ANY';
-        opt.textContent = 'ANY (general)';
-        dom.filterMap.appendChild(opt);
+        addMapOpt('ANY', 'ANY (general)');
     }
 
     // Operators
@@ -1092,24 +1135,103 @@ function bindEvents() {
     // Search
     dom.searchInput.addEventListener('input', () => {
         dom.searchClear.classList.toggle('hidden', !dom.searchInput.value);
+        updateFilterResetBtn();
         renderTactics();
     });
     dom.searchClear.addEventListener('click', () => {
         dom.searchInput.value = '';
         dom.searchClear.classList.add('hidden');
+        updateFilterResetBtn();
         renderTactics();
     });
 
     // Filters
     [dom.filterMap, dom.filterOperator, dom.filterCategory, dom.filterFloor, dom.filterRole].forEach(sel => {
         sel.addEventListener('change', () => {
-            sel.classList.toggle('active', !!sel.value);
-            updateFilterResetBtn();
+            syncFilterUI();
             renderTactics();
         });
     });
 
     dom.filterReset.addEventListener('click', resetFilters);
+
+    // Match Mode Toggle
+    if (dom.matchModeToggle) {
+        dom.matchModeToggle.addEventListener('change', () => {
+            isMatchMode = dom.matchModeToggle.checked;
+            localStorage.setItem('r6s_match_mode', isMatchMode ? 'true' : 'false');
+            updateMatchModeUI();
+            renderTactics();
+        });
+    }
+
+    // Match Mode Map Select (Map Lock)
+    if (dom.matchMapSelect) {
+        dom.matchMapSelect.addEventListener('change', () => {
+            dom.filterMap.value = dom.matchMapSelect.value;
+            syncFilterUI();
+            renderTactics();
+        });
+    }
+
+    // Match Mode Quick Role Toggle (Segmented control)
+    if (dom.matchRoleSegmented) {
+        dom.matchRoleSegmented.addEventListener('click', (e) => {
+            const btn = e.target.closest('.segment-btn');
+            if (!btn) return;
+            const targetRole = btn.dataset.role !== undefined ? btn.dataset.role : '';
+            if (targetRole === '') {
+                dom.filterRole.value = '';
+            } else {
+                dom.filterRole.value = (dom.filterRole.value === targetRole) ? '' : targetRole;
+            }
+            syncFilterUI();
+            renderTactics();
+        });
+    }
+
+    // Match Mode Quick Floor Toggle (Segmented control)
+    if (dom.matchFloorSegmented) {
+        dom.matchFloorSegmented.addEventListener('click', (e) => {
+            const btn = e.target.closest('.segment-btn');
+            if (!btn) return;
+            const targetFloor = btn.dataset.floor !== undefined ? btn.dataset.floor : '';
+            if (targetFloor === '') {
+                dom.filterFloor.value = '';
+            } else {
+                dom.filterFloor.value = (dom.filterFloor.value === targetFloor) ? '' : targetFloor;
+            }
+            syncFilterUI();
+            renderTactics();
+        });
+    }
+
+    // Clickable Badges & Video Link delegation on tactics grid
+    dom.grid.addEventListener('click', (e) => {
+        const cardLink = e.target.closest('.card-link');
+        if (cardLink) {
+            e.preventDefault();
+            const tacticId = cardLink.dataset.tacticId;
+            if (tacticId) {
+                openVideoModal(tacticId, e);
+                return;
+            }
+        }
+        handleBadgeClick(e);
+    });
+
+    // Video Modal events
+    if (dom.videoZoomBtn) {
+        dom.videoZoomBtn.addEventListener('click', toggleVideoZoom);
+    }
+    if (dom.videoModalClose) {
+        dom.videoModalClose.addEventListener('click', closeVideoModal);
+    }
+    if (dom.videoModalOverlay) {
+        dom.videoModalOverlay.addEventListener('click', (e) => {
+            if (e.target === dom.videoModalOverlay) closeVideoModal();
+        });
+    }
 
     // Modal
     $('#modalClose').addEventListener('click', closeModal);
@@ -1144,13 +1266,75 @@ function bindEvents() {
             closeModal();
             closeDeleteModal();
             dom.importOverlay.classList.add('hidden');
+            closeVideoModal();
         }
     });
 }
 
+function updateMatchModeUI() {
+    if (!dom.matchModePanel) return;
+    dom.matchModePanel.classList.toggle('hidden', !isMatchMode);
+    if (dom.matchModeBadge) {
+        dom.matchModeBadge.textContent = isMatchMode ? 'ACTIVE' : 'OFF';
+        dom.matchModeBadge.classList.toggle('active', isMatchMode);
+    }
+    if (dom.matchModeDot) {
+        dom.matchModeDot.classList.toggle('active', isMatchMode);
+    }
+    if (dom.matchModeContainer) {
+        dom.matchModeContainer.classList.toggle('active', isMatchMode);
+    }
+}
+
 function updateFilterResetBtn() {
-    const hasFilters = dom.filterMap.value || dom.filterOperator.value || dom.filterCategory.value || dom.filterFloor.value || dom.filterRole.value;
+    const hasFilters = Boolean(
+        dom.filterMap.value ||
+        dom.filterOperator.value ||
+        dom.filterCategory.value ||
+        dom.filterFloor.value ||
+        dom.filterRole.value ||
+        (dom.searchInput && dom.searchInput.value.trim().length > 0)
+    );
     dom.filterReset.classList.toggle('hidden', !hasFilters);
+}
+
+function syncFilterUI() {
+    // 1. Dropdown active states
+    [dom.filterMap, dom.filterOperator, dom.filterCategory, dom.filterFloor, dom.filterRole].forEach(sel => {
+        sel.classList.toggle('active', !!sel.value);
+    });
+
+    // 2. Map Lock in Match Mode
+    if (dom.matchMapSelect) {
+        dom.matchMapSelect.value = dom.filterMap.value;
+        dom.matchMapSelect.classList.toggle('active', !!dom.filterMap.value);
+    }
+
+    // 3. Quick Role in Match Mode
+    if (dom.matchRoleSegmented) {
+        const curRole = dom.filterRole.value;
+        dom.matchRoleSegmented.querySelectorAll('.segment-btn').forEach(btn => {
+            const btnRole = btn.dataset.role || '';
+            btn.classList.toggle('active', btnRole === curRole);
+        });
+    }
+
+    // 4. Quick Floor in Match Mode
+    if (dom.matchFloorSegmented) {
+        const curFloor = dom.filterFloor.value;
+        dom.matchFloorSegmented.querySelectorAll('.segment-btn').forEach(btn => {
+            const btnFloor = btn.dataset.floor || '';
+            btn.classList.toggle('active', btnFloor === curFloor);
+        });
+        if (dom.btnFloor3F) {
+            const isKafe = dom.filterMap.value === 'Kafe Dostoyevsky';
+            const is3F = curFloor === '3F';
+            dom.btnFloor3F.style.display = (isKafe || is3F) ? 'inline-flex' : 'none';
+        }
+    }
+
+    // 5. Update Clear Filters button
+    updateFilterResetBtn();
 }
 
 function resetFilters() {
@@ -1161,8 +1345,44 @@ function resetFilters() {
     dom.filterRole.value = '';
     dom.searchInput.value = '';
     dom.searchClear.classList.add('hidden');
-    [dom.filterMap, dom.filterOperator, dom.filterCategory, dom.filterFloor, dom.filterRole].forEach(s => s.classList.remove('active'));
-    dom.filterReset.classList.add('hidden');
+    syncFilterUI();
+    renderTactics();
+}
+
+function handleBadgeClick(e) {
+    const badge = e.target.closest('.badge-clickable');
+    if (!badge) return;
+
+    if (e.target.closest('.btn-card-edit') || e.target.closest('.btn-card-delete') || e.target.closest('.card-link')) {
+        return;
+    }
+
+    const type = badge.dataset.badgeType;
+    const value = badge.dataset.badgeValue;
+    if (!type || value === undefined) return;
+
+    toggleFilter(type, value);
+}
+
+function toggleFilter(type, value) {
+    switch (type) {
+        case 'map':
+            dom.filterMap.value = (dom.filterMap.value === value) ? '' : value;
+            break;
+        case 'floor':
+            dom.filterFloor.value = (dom.filterFloor.value === value) ? '' : value;
+            break;
+        case 'role':
+            dom.filterRole.value = (dom.filterRole.value === value) ? '' : value;
+            break;
+        case 'operator':
+            dom.filterOperator.value = (dom.filterOperator.value === value) ? '' : value;
+            break;
+        case 'category':
+            dom.filterCategory.value = (dom.filterCategory.value === value) ? '' : value;
+            break;
+    }
+    syncFilterUI();
     renderTactics();
 }
 
@@ -1176,7 +1396,15 @@ function getFilteredTactics() {
     const roleFilter = dom.filterRole.value;
 
     return tactics.filter(t => {
-        if (mapFilter && t.map !== mapFilter) return false;
+        if (mapFilter) {
+            const tMap = (t.map || '').trim();
+            if (isMatchMode) {
+                // Map Lock: show selected map + ANY general tactics
+                if (tMap !== mapFilter && tMap.toUpperCase() !== 'ANY') return false;
+            } else {
+                if (tMap !== mapFilter) return false;
+            }
+        }
         if (opFilter && t.operator !== opFilter) return false;
         if (catFilter && t.category !== catFilter) return false;
         if (floorFilter && t.floor !== floorFilter) return false;
@@ -1218,14 +1446,14 @@ function renderTactics() {
     filtered.sort((a, b) => {
         const mapA = (a.map || '').toUpperCase() === 'ANY' ? '' : (a.map || '').toUpperCase();
         const mapB = (b.map || '').toUpperCase() === 'ANY' ? '' : (b.map || '').toUpperCase();
-        
+
         if (mapA !== mapB) {
             return mapA.localeCompare(mapB);
         }
 
         const opA = (a.operator || '').toUpperCase() === 'ANY' || (a.operator || '').toUpperCase() === 'GENERAL' ? '' : (a.operator || '').toUpperCase();
         const opB = (b.operator || '').toUpperCase() === 'ANY' || (b.operator || '').toUpperCase() === 'GENERAL' ? '' : (b.operator || '').toUpperCase();
-        
+
         return opA.localeCompare(opB);
     });
 
@@ -1236,34 +1464,73 @@ function renderTactics() {
         const roleIcon = t.role === 'Attacker' ? '⚔️' : '🛡️';
         const floorLabel = t.floor && t.floor !== 'ANY' ? t.floor : '';
 
+        const isMapActive = dom.filterMap.value && dom.filterMap.value === t.map;
+        const isFloorActive = dom.filterFloor.value && dom.filterFloor.value === t.floor;
+        const isRoleActive = dom.filterRole.value && dom.filterRole.value === t.role;
+        const isOpActive = dom.filterOperator.value && dom.filterOperator.value === t.operator;
+        const isCatActive = dom.filterCategory.value && dom.filterCategory.value === t.category;
+
         return `
         <div class="tactic-card" style="--card-accent: ${categoryColor}; animation-delay: ${i * 0.05}s">
             <div class="card-header">
                 <div class="card-header-left">
-                    <img class="card-op-icon" src="${operatorIcon}" alt="${escapeHtml(t.operator)}" onerror="this.style.display='none'">
+                    <img class="card-op-icon ${t.operator && t.operator !== 'ANY' ? 'badge-clickable' : ''} ${isOpActive ? 'is-active' : ''}" 
+                         src="${operatorIcon}" 
+                         alt="${escapeHtml(t.operator)}" 
+                         ${t.operator && t.operator !== 'ANY' ? `data-badge-type="operator" data-badge-value="${escapeHtml(t.operator)}" title="Filter by operator: ${escapeHtml(t.operator)}"` : ''} 
+                         onerror="this.style.display='none'">
                     <div>
-                        <div class="card-map">${escapeHtml(t.map)}${floorLabel ? ` <span style="font-size:0.75rem;color:var(--text-muted);font-weight:400">${floorLabel}</span>` : ''}</div>
+                        <div class="card-map">
+                            <span class="badge-clickable badge-map ${isMapActive ? 'is-active' : ''}" 
+                                  data-badge-type="map" 
+                                  data-badge-value="${escapeHtml(t.map)}" 
+                                  title="Filter by map: ${escapeHtml(t.map)}">${escapeHtml(t.map)}</span>
+                            ${floorLabel ? `
+                            <span class="badge-clickable badge-floor ${isFloorActive ? 'is-active' : ''}" 
+                                  data-badge-type="floor" 
+                                  data-badge-value="${escapeHtml(t.floor)}" 
+                                  title="Filter by floor: ${escapeHtml(t.floor)}">${escapeHtml(floorLabel)}</span>` : ''}
+                        </div>
                         ${t.site ? `<div class="card-site-inline">${escapeHtml(t.site)}</div>` : ''}
                     </div>
                 </div>
                 <div class="card-actions">
-                    <button class="btn-card-edit" onclick="openEditModal('${t.id}')" title="Düzenle">
+                    <button class="btn-card-edit" onclick="openEditModal('${t.id}')" title="Edit">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
-                    <button class="btn-card-delete" onclick="openDeleteModal('${t.id}')" title="Sil">
+                    <button class="btn-card-delete" onclick="openDeleteModal('${t.id}')" title="Delete">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
                     </button>
                 </div>
             </div>
             <div class="card-tags">
-                ${t.role ? `<span class="tag" style="background:${t.role === 'Attacker' ? 'rgba(239,83,80,0.12)' : 'rgba(66,165,245,0.12)'};color:${t.role === 'Attacker' ? '#ef5350' : '#42a5f5'};border:1px solid ${t.role === 'Attacker' ? 'rgba(239,83,80,0.25)' : 'rgba(66,165,245,0.25)'}">${roleIcon} ${t.role}</span>` : ''}
-                ${t.operator && t.operator !== 'ANY' ? `<span class="tag tag-operator"><img class="tag-op-icon" src="${operatorIcon}" alt="" onerror="this.style.display='none'"> ${escapeHtml(t.operator)}</span>` : ''}
-                <span class="tag tag-category" data-category="${escapeHtml(t.category)}">${escapeHtml(t.category)}</span>
+                ${t.role ? `
+                <span class="tag badge-clickable ${isRoleActive ? 'is-active' : ''}" 
+                      data-badge-type="role" 
+                      data-badge-value="${escapeHtml(t.role)}" 
+                      title="Filter by role: ${escapeHtml(t.role)}"
+                      style="background:${t.role === 'Attacker' ? 'rgba(239,83,80,0.12)' : 'rgba(66,165,245,0.12)'};color:${t.role === 'Attacker' ? '#ef5350' : '#42a5f5'};border:1px solid ${t.role === 'Attacker' ? 'rgba(239,83,80,0.25)' : 'rgba(66,165,245,0.25)'}">
+                    ${roleIcon} ${t.role}
+                </span>` : ''}
+                ${t.operator && t.operator !== 'ANY' ? `
+                <span class="tag tag-operator badge-clickable ${isOpActive ? 'is-active' : ''}" 
+                      data-badge-type="operator" 
+                      data-badge-value="${escapeHtml(t.operator)}" 
+                      title="Filter by operator: ${escapeHtml(t.operator)}">
+                    <img class="tag-op-icon" src="${operatorIcon}" alt="" onerror="this.style.display='none'"> ${escapeHtml(t.operator)}
+                </span>` : ''}
+                <span class="tag tag-category badge-clickable ${isCatActive ? 'is-active' : ''}" 
+                      data-badge-type="category" 
+                      data-badge-value="${escapeHtml(t.category)}" 
+                      data-category="${escapeHtml(t.category)}" 
+                      title="Filter by category: ${escapeHtml(t.category)}">
+                    ${escapeHtml(t.category)}
+                </span>
             </div>
-            <a href="${escapeHtml(t.link)}" target="_blank" rel="noopener noreferrer" class="card-link">
+            <a href="${escapeHtml(t.link)}" class="card-link" data-tactic-id="${t.id}" onclick="openVideoModal('${t.id}', event)" title="Watch Video">
                 <span class="link-platform ${platform.class}">${platform.icon} ${platform.name}</span>
                 <span>${escapeHtml(shortenUrl(t.link))}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;flex-shrink:0"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="margin-left:auto;flex-shrink:0"><polygon points="6 4 20 12 6 20 6 4"/></svg>
             </a>
         </div>`;
     }).join('');
@@ -1318,11 +1585,161 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+// ===== VIDEO EMBED & MODAL =====
+function getEmbedInfo(url) {
+    if (!url) return null;
+    const trimmed = url.trim();
+
+    // Instagram: reels, reel, p, or tv
+    const igMatch = trimmed.match(/instagram\.com\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/i);
+    if (igMatch) {
+        return {
+            type: 'instagram',
+            embedUrl: `https://www.instagram.com/reel/${igMatch[1]}/embed/`,
+            platformName: 'Instagram',
+            isVertical: true
+        };
+    }
+
+    // YouTube Shorts: youtube.com/shorts/ID
+    const ytShortsMatch = trimmed.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/i);
+    if (ytShortsMatch) {
+        return {
+            type: 'youtube',
+            embedUrl: `https://www.youtube.com/embed/${ytShortsMatch[1]}?autoplay=1`,
+            platformName: 'YouTube Shorts',
+            isVertical: true
+        };
+    }
+
+    // YouTube standard watch, embed, or youtu.be
+    const ytMatch = trimmed.match(/(?:youtube\.com\/(?:watch\?.*v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
+    if (ytMatch) {
+        return {
+            type: 'youtube',
+            embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`,
+            platformName: 'YouTube',
+            isVertical: false
+        };
+    }
+
+    return null;
+}
+
+function setVideoZoom(level) {
+    videoZoomLevel = level;
+    if (!dom.videoModal) return;
+    dom.videoModal.classList.remove('is-zoomed-13', 'is-zoomed-15');
+
+    if (videoZoomLevel === 1) {
+        dom.videoModal.classList.add('is-zoomed-13');
+        if (dom.videoZoomBtn) dom.videoZoomBtn.classList.add('active');
+        if (dom.videoZoomText) dom.videoZoomText.textContent = 'Zoom 1.5x';
+    } else if (videoZoomLevel === 2) {
+        dom.videoModal.classList.add('is-zoomed-15');
+        if (dom.videoZoomBtn) dom.videoZoomBtn.classList.add('active');
+        if (dom.videoZoomText) dom.videoZoomText.textContent = 'Reset (1x)';
+    } else {
+        videoZoomLevel = 0;
+        if (dom.videoZoomBtn) dom.videoZoomBtn.classList.remove('active');
+        if (dom.videoZoomText) dom.videoZoomText.textContent = 'Zoom 1.3x';
+    }
+}
+
+function toggleVideoZoom() {
+    const nextLevel = (videoZoomLevel + 1) % 3;
+    setVideoZoom(nextLevel);
+}
+
+function openVideoModal(id, e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    const tactic = tactics.find(t => t.id === id);
+    if (!tactic) return;
+
+    // Reset zoom state
+    setVideoZoom(0);
+
+    const embed = getEmbedInfo(tactic.link);
+
+    // Title
+    const siteStr = tactic.site ? ` — ${tactic.site}` : '';
+    dom.videoModalTitle.textContent = `${tactic.map}${siteStr}`;
+
+    // Meta Badges
+    const roleIcon = tactic.role === 'Attacker' ? '⚔️' : '🛡️';
+    const floorLabel = tactic.floor && tactic.floor !== 'ANY' ? tactic.floor : '';
+    const operatorIcon = getOperatorIcon(tactic.operator);
+
+    dom.videoModalMeta.innerHTML = `
+        <span class="tag" style="background:rgba(255,255,255,0.06);color:var(--text-primary);border:1px solid var(--border-color)">${escapeHtml(tactic.map)}</span>
+        ${floorLabel ? `<span class="badge-floor" style="margin-left:0">${escapeHtml(floorLabel)}</span>` : ''}
+        ${tactic.role ? `<span class="tag" style="background:${tactic.role === 'Attacker' ? 'rgba(239,83,80,0.12)' : 'rgba(66,165,245,0.12)'};color:${tactic.role === 'Attacker' ? '#ef5350' : '#42a5f5'};border:1px solid ${tactic.role === 'Attacker' ? 'rgba(239,83,80,0.25)' : 'rgba(66,165,245,0.25)'}">${roleIcon} ${escapeHtml(tactic.role)}</span>` : ''}
+        ${tactic.operator && tactic.operator !== 'ANY' ? `<span class="tag tag-operator"><img class="tag-op-icon" src="${operatorIcon}" alt="" onerror="this.style.display='none'"> ${escapeHtml(tactic.operator)}</span>` : ''}
+        <span class="tag tag-category" data-category="${escapeHtml(tactic.category)}">${escapeHtml(tactic.category)}</span>
+    `;
+
+    // Fallback button
+    dom.videoFallbackBtn.href = tactic.link;
+    if (embed && embed.type === 'youtube') {
+        dom.videoFallbackText.textContent = 'Open in YouTube ↗';
+    } else {
+        dom.videoFallbackText.textContent = 'Open in Instagram ↗';
+    }
+
+    // Modal width styling
+    if (embed && embed.type === 'youtube' && !embed.isVertical) {
+        dom.videoModal.classList.add('video-horizontal');
+    } else {
+        dom.videoModal.classList.remove('video-horizontal');
+    }
+
+    // Inject iframe (or fallback)
+    if (embed && embed.embedUrl) {
+        dom.videoPlayerContainer.innerHTML = `
+            <iframe 
+                src="${escapeHtml(embed.embedUrl)}" 
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" 
+                allowfullscreen="true" 
+                scrolling="yes" 
+                frameborder="0"
+                title="${escapeHtml(tactic.map)} - ${escapeHtml(tactic.site || '')}">
+            </iframe>
+        `;
+    } else {
+        dom.videoPlayerContainer.innerHTML = `
+            <div class="video-embed-error">
+                <p>This video link cannot be embedded directly.</p>
+                <a href="${escapeHtml(tactic.link)}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-top:14px;display:inline-flex;">
+                    Open Video in New Tab ↗
+                </a>
+            </div>
+        `;
+    }
+
+    dom.videoModalOverlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+    if (!dom.videoModalOverlay) return;
+    setVideoZoom(0);
+    dom.videoModalOverlay.classList.add('hidden');
+    document.body.style.overflow = '';
+    // Empty the player container to destroy iframe and immediately stop video & audio
+    if (dom.videoPlayerContainer) {
+        dom.videoPlayerContainer.innerHTML = '';
+    }
+}
+
 // ===== MODAL =====
 function openAddModal() {
     editingId = null;
-    dom.modalTitle.textContent = 'Yeni Taktik Ekle';
-    dom.btnSubmitText.textContent = 'Kaydet';
+    dom.modalTitle.textContent = 'Add New Tactic';
+    dom.btnSubmitText.textContent = 'Save';
     dom.tacticForm.reset();
     dom.modalOverlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -1333,8 +1750,8 @@ function openEditModal(id) {
     if (!tactic) return;
 
     editingId = id;
-    dom.modalTitle.textContent = 'Taktik Düzenle';
-    dom.btnSubmitText.textContent = 'Güncelle';
+    dom.modalTitle.textContent = 'Edit Tactic';
+    dom.btnSubmitText.textContent = 'Update';
 
     dom.inputMap.value = tactic.map || '';
     dom.inputCategory.value = tactic.category || '';
@@ -1430,13 +1847,13 @@ function exportData() {
     a.download = `r6s_tactics_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('Veriler dışa aktarıldı! 📦', 'success');
+    showToast('Data exported successfully! 📦', 'success');
 }
 
 function importData() {
     const file = dom.importFile.files[0];
     if (!file) {
-        showToast('Lütfen bir dosya seç!', 'error');
+        showToast('Please select a file!', 'error');
         return;
     }
 
@@ -1444,7 +1861,7 @@ function importData() {
     reader.onload = (e) => {
         try {
             const data = JSON.parse(e.target.result);
-            if (!Array.isArray(data)) throw new Error('Geçersiz format');
+            if (!Array.isArray(data)) throw new Error('Invalid format');
 
             // Merge — add IDs to any missing
             data.forEach(t => {
@@ -1465,7 +1882,7 @@ function importData() {
             renderTactics();
             showToast(`${data.length} tactics imported! ✅`, 'success');
         } catch (err) {
-            showToast('Dosya okunamadı! Geçerli bir JSON dosyası seç.', 'error');
+            showToast('Could not read file! Select a valid JSON file.', 'error');
         }
     };
     reader.readAsText(file);
@@ -1486,6 +1903,9 @@ function showToast(message, type = 'success') {
 // ===== MAKE FUNCTIONS GLOBAL FOR ONCLICK =====
 window.openEditModal = openEditModal;
 window.openDeleteModal = openDeleteModal;
+window.openVideoModal = openVideoModal;
+window.closeVideoModal = closeVideoModal;
+window.toggleVideoZoom = toggleVideoZoom;
 
 // ===== START =====
 document.addEventListener('DOMContentLoaded', init);
