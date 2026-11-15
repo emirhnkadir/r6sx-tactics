@@ -972,12 +972,26 @@ const dom = {
     btnCopySql: $('#btnCopySql')
 };
 
+// ===== BACKGROUND SLIDESHOW =====
+function initBackgroundSlideshow() {
+    const slides = $$('.bg-slide');
+    if (!slides || slides.length <= 1) return;
+    let currentSlide = 0;
+
+    setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 7000);
+}
+
 // ===== INIT =====
 function init() {
     loadTactics();
     populateFilterDropdowns();
     populateFormDropdowns();
     bindEvents();
+    initBackgroundSlideshow();
 
     isMatchMode = localStorage.getItem('r6s_match_mode') === 'true';
     if (dom.matchModeToggle) {

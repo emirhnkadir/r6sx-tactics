@@ -14,13 +14,16 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
-    <!-- Cinematic R6 Background Layer -->
-    <div class="cinematic-bg" aria-hidden="true">
-        <div class="cinematic-bg-img"></div>
-        <div class="cinematic-bg-overlay"></div>
+    <!-- Cinematic Background Slideshow Layer (Crystal Clear with Dark Overlay) -->
+    <div class="bg-slideshow-container" aria-hidden="true">
+        <div class="bg-slide active" style="background-image: url('images/bg-mozzie.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('images/bg-stadium.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('images/bg-equipment.jpg');"></div>
+        <div class="bg-slide" style="background-image: url('images/bg-maverick.jpg');"></div>
+        <div class="bg-slideshow-overlay"></div>
     </div>
 
     <!-- Header -->
@@ -370,7 +373,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="app.js?v=8"></script>
+    <script src="app.js?v=9"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
