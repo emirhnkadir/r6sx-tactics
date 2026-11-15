@@ -1556,6 +1556,188 @@ body::before {
     }
 }
 
+/* ===== Cloud Sync (Supabase) ===== */
+.btn-cloud-sync {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cloud-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #64748b;
+    border: 1.5px solid var(--bg-card);
+    transition: all 0.3s ease;
+}
+
+.btn-cloud-sync.connected .cloud-dot {
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+}
+
+.btn-cloud-sync.syncing .cloud-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+    animation: cloudPulse 0.9s infinite alternate;
+}
+
+.btn-cloud-sync.error .cloud-dot {
+    background: #ef5350;
+    box-shadow: 0 0 8px #ef5350;
+}
+
+@keyframes cloudPulse {
+    from { opacity: 0.35; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.25); }
+}
+
+/* Cloud Status Banner */
+.cloud-status-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    margin-bottom: 16px;
+    transition: all 0.25s ease;
+}
+
+.cloud-status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #64748b;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.cloud-status-banner.connected {
+    border-color: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.07);
+}
+
+.cloud-status-banner.connected .cloud-status-indicator {
+    background: #22c55e;
+    box-shadow: 0 0 10px #22c55e;
+}
+
+.cloud-status-banner.syncing {
+    border-color: rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.07);
+}
+
+.cloud-status-banner.syncing .cloud-status-indicator {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+.cloud-status-banner.error {
+    border-color: rgba(239, 83, 80, 0.35);
+    background: rgba(239, 83, 80, 0.07);
+}
+
+.cloud-status-banner.error .cloud-status-indicator {
+    background: #ef5350;
+    box-shadow: 0 0 10px #ef5350;
+}
+
+.cloud-status-info strong {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+}
+
+.cloud-status-info p {
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    margin: 3px 0 0;
+    line-height: 1.4;
+}
+
+.cloud-modal-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.btn-danger-outline {
+    background: transparent;
+    border: 1px solid rgba(239, 83, 80, 0.4);
+    color: var(--danger);
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-danger-outline:hover {
+    background: rgba(239, 83, 80, 0.15);
+    border-color: var(--danger);
+}
+
+/* Quick Setup Guide Box */
+.cloud-setup-guide {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.guide-header strong {
+    font-size: 0.82rem;
+    color: var(--accent);
+}
+
+.btn-copy-sql {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-copy-sql:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+}
+
+.guide-steps {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.guide-steps a {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
     .match-mode-panel {

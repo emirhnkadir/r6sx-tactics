@@ -1,9 +1,10 @@
-const CACHE_NAME = 'r6sx-tactics-v5';
+const CACHE_NAME = 'r6sx-tactics-v6';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
     './app.js',
+    './config.js',
     './manifest.json',
     './icon.svg'
 ];

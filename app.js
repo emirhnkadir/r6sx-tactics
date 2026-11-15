@@ -899,6 +899,9 @@ let editingId = null;
 let deleteTargetId = null;
 let isMatchMode = false;
 let lastPinnedId = null;
+let supabaseClient = null;
+let realtimeChannel = null;
+let cloudStatus = 'local';
 
 // ===== DOM REFS =====
 const $ = (sel) => document.querySelector(sel);
@@ -945,7 +948,21 @@ const dom = {
     matchMapSelect: $('#matchMapSelect'),
     matchRoleSegmented: $('#matchRoleSegmented'),
     matchFloorSegmented: $('#matchFloorSegmented'),
-    btnFloor3F: $('#btnFloor3F')
+    btnFloor3F: $('#btnFloor3F'),
+    // Cloud Sync DOM elements
+    btnCloudSync: $('#btnCloudSync'),
+    cloudDot: $('#cloudDot'),
+    cloudSyncOverlay: $('#cloudSyncOverlay'),
+    cloudSyncClose: $('#cloudSyncClose'),
+    cloudStatusBanner: $('#cloudStatusBanner'),
+    cloudStatusTitle: $('#cloudStatusTitle'),
+    cloudStatusDesc: $('#cloudStatusDesc'),
+    inputSupabaseUrl: $('#inputSupabaseUrl'),
+    inputSupabaseKey: $('#inputSupabaseKey'),
+    btnSaveCloud: $('#btnSaveCloud'),
+    btnUploadToCloud: $('#btnUploadToCloud'),
+    btnDisconnectCloud: $('#btnDisconnectCloud'),
+    btnCopySql: $('#btnCopySql')
 };
 
 // ===== INIT =====
@@ -966,6 +983,7 @@ function init() {
     updateMatchModeUI();
     syncFilterUI();
     renderTactics();
+    initSupabase();
 }
 
 // ===== DATA / STORAGE =====
@@ -1267,12 +1285,38 @@ function bindEvents() {
         if (e.target === dom.importOverlay) dom.importOverlay.classList.add('hidden');
     });
 
+    // Cloud Sync Modal events
+    if (dom.btnCloudSync) {
+        dom.btnCloudSync.addEventListener('click', openCloudSyncModal);
+    }
+    if (dom.cloudSyncClose) {
+        dom.cloudSyncClose.addEventListener('click', closeCloudSyncModal);
+    }
+    if (dom.cloudSyncOverlay) {
+        dom.cloudSyncOverlay.addEventListener('click', (e) => {
+            if (e.target === dom.cloudSyncOverlay) closeCloudSyncModal();
+        });
+    }
+    if (dom.btnSaveCloud) {
+        dom.btnSaveCloud.addEventListener('click', saveCloudCredentials);
+    }
+    if (dom.btnUploadToCloud) {
+        dom.btnUploadToCloud.addEventListener('click', () => uploadAllToCloud(true));
+    }
+    if (dom.btnDisconnectCloud) {
+        dom.btnDisconnectCloud.addEventListener('click', disconnectCloud);
+    }
+    if (dom.btnCopySql) {
+        dom.btnCopySql.addEventListener('click', copySqlSetupScript);
+    }
+
     // Keyboard
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal();
             closeDeleteModal();
             dom.importOverlay.classList.add('hidden');
+            closeCloudSyncModal();
         }
     });
 }
@@ -1683,6 +1727,7 @@ function handleFormSubmit(e) {
         link: dom.inputLink.value
     };
 
+    let savedItem = null;
     if (editingId) {
         const idx = tactics.findIndex(t => t.id === editingId);
         if (idx !== -1) {
@@ -1692,6 +1737,7 @@ function handleFormSubmit(e) {
                 isFavorite: typeof tactics[idx].isFavorite === 'boolean' ? tactics[idx].isFavorite : false,
                 createdAt: typeof tactics[idx].createdAt === 'number' ? tactics[idx].createdAt : Date.now()
             };
+            savedItem = tactics[idx];
             showToast('Tactic updated! ✅', 'success');
         }
     } else {
@@ -1699,12 +1745,19 @@ function handleFormSubmit(e) {
         data.isFavorite = false;
         data.createdAt = Date.now();
         tactics.unshift(data);
+        savedItem = data;
         showToast('New tactic added! 🎯', 'success');
     }
 
     saveTactics();
     closeModal();
     renderTactics();
+
+    if (supabaseClient && savedItem) {
+        supabaseClient.from('tactics').upsert(toDbRow(savedItem)).then(({ error }) => {
+            if (error) console.error('Cloud upsert error:', error);
+        });
+    }
 }
 
 function detectFloor(site) {
@@ -1738,6 +1791,12 @@ function toggleFavorite(id, e) {
     saveTactics();
     renderTactics();
     showToast(tactic.isFavorite ? 'Pinned to favorites ⭐' : 'Removed from favorites', tactic.isFavorite ? 'success' : 'info');
+
+    if (supabaseClient) {
+        supabaseClient.from('tactics').update({ is_favorite: tactic.isFavorite }).eq('id', tactic.id).then(({ error }) => {
+            if (error) console.error('Cloud favorite error:', error);
+        });
+    }
 }
 
 // ===== DELETE =====
@@ -1757,11 +1816,18 @@ function closeDeleteModal() {
 
 function confirmDelete() {
     if (!deleteTargetId) return;
-    tactics = tactics.filter(t => t.id !== deleteTargetId);
+    const targetId = deleteTargetId;
+    tactics = tactics.filter(t => t.id !== targetId);
     saveTactics();
     closeDeleteModal();
     renderTactics();
     showToast('Tactic deleted 🗑️', 'error');
+
+    if (supabaseClient) {
+        supabaseClient.from('tactics').delete().eq('id', targetId).then(({ error }) => {
+            if (error) console.error('Cloud delete error:', error);
+        });
+    }
 }
 
 // ===== IMPORT / EXPORT =====
@@ -1809,11 +1875,292 @@ function importData() {
             dom.importOverlay.classList.add('hidden');
             renderTactics();
             showToast(`${data.length} tactics imported! ✅`, 'success');
+
+            if (supabaseClient) {
+                uploadAllToCloud(false);
+            }
         } catch (err) {
             showToast('Could not read file! Select a valid JSON file.', 'error');
         }
     };
     reader.readAsText(file);
+}
+
+// ===== SUPABASE & CLOUD SYNC =====
+const SQL_SETUP_SCRIPT = `-- 1. Create tactics table
+create table if not exists public.tactics (
+  id text primary key,
+  map text not null,
+  floor text default 'ANY',
+  site text default '',
+  role text default 'Defender',
+  operator text default 'ANY',
+  category text default 'Setup',
+  link text not null,
+  is_favorite boolean default false,
+  created_at bigint default (extract(epoch from now()) * 1000)::bigint
+);
+
+-- 2. Enable Row Level Security (RLS)
+alter table public.tactics enable row level security;
+
+-- 3. Create access policies (Public read & write for tactics library)
+create policy "Allow public read" on public.tactics for select using (true);
+create policy "Allow public insert" on public.tactics for insert with check (true);
+create policy "Allow public update" on public.tactics for update using (true);
+create policy "Allow public delete" on public.tactics for delete using (true);
+
+-- 4. Enable Realtime updates
+alter publication supabase_realtime add table public.tactics;`;
+
+function getSupabaseUrl() {
+    return (localStorage.getItem('r6s_supabase_url') || window.ENV_CONFIG?.SUPABASE_URL || '').trim();
+}
+
+function getSupabaseKey() {
+    return (localStorage.getItem('r6s_supabase_key') || window.ENV_CONFIG?.SUPABASE_ANON_KEY || '').trim();
+}
+
+function toDbRow(t) {
+    return {
+        id: t.id,
+        map: t.map,
+        floor: t.floor || 'ANY',
+        site: t.site || '',
+        role: t.role || 'Defender',
+        operator: t.operator || 'ANY',
+        category: t.category || 'Setup',
+        link: t.link,
+        is_favorite: !!t.isFavorite,
+        created_at: typeof t.createdAt === 'number' ? t.createdAt : Date.now()
+    };
+}
+
+function fromDbRow(row) {
+    return {
+        id: row.id,
+        map: row.map,
+        floor: row.floor || 'ANY',
+        site: row.site || '',
+        role: row.role || 'Defender',
+        operator: row.operator || 'ANY',
+        category: row.category || 'Setup',
+        link: row.link,
+        isFavorite: !!row.is_favorite,
+        createdAt: typeof row.created_at === 'number' ? row.created_at : parseInt(row.created_at) || Date.now()
+    };
+}
+
+function updateCloudStatus(status, message) {
+    cloudStatus = status;
+    if (dom.btnCloudSync) {
+        dom.btnCloudSync.className = `btn-icon btn-cloud-sync ${status}`;
+    }
+
+    if (dom.cloudStatusBanner) {
+        dom.cloudStatusBanner.className = `cloud-status-banner ${status}`;
+    }
+
+    if (dom.btnDisconnectCloud) {
+        dom.btnDisconnectCloud.classList.toggle('hidden', status === 'local');
+    }
+
+    if (!dom.cloudStatusTitle || !dom.cloudStatusDesc) return;
+
+    if (status === 'connected') {
+        dom.cloudStatusTitle.textContent = 'Connected to Supabase 🟢';
+        dom.cloudStatusDesc.textContent = message || 'Real-time synchronization active across all devices.';
+    } else if (status === 'syncing') {
+        dom.cloudStatusTitle.textContent = 'Syncing Data 🟡';
+        dom.cloudStatusDesc.textContent = message || 'Syncing tactics with Supabase cloud database...';
+    } else if (status === 'connecting') {
+        dom.cloudStatusTitle.textContent = 'Connecting 🟡';
+        dom.cloudStatusDesc.textContent = 'Connecting to Supabase project...';
+    } else if (status === 'error') {
+        dom.cloudStatusTitle.textContent = 'Connection Error 🔴';
+        dom.cloudStatusDesc.textContent = message || 'Could not connect to Supabase. Check your Project URL and Anon Key.';
+    } else {
+        dom.cloudStatusTitle.textContent = 'Local Storage Mode ⚪';
+        dom.cloudStatusDesc.textContent = 'Data is stored in this browser only. Connect Supabase to sync across devices.';
+    }
+}
+
+async function initSupabase(showToastOnSuccess = false) {
+    const url = getSupabaseUrl();
+    const key = getSupabaseKey();
+
+    if (!url || !key) {
+        updateCloudStatus('local');
+        return;
+    }
+
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+        updateCloudStatus('error', 'Supabase client library failed to load.');
+        return;
+    }
+
+    try {
+        updateCloudStatus('connecting');
+        supabaseClient = window.supabase.createClient(url, key);
+
+        await fetchCloudTactics();
+        subscribeToRealtime();
+
+        updateCloudStatus('connected');
+        if (showToastOnSuccess) {
+            showToast('Connected to Supabase! ☁️', 'success');
+        }
+    } catch (err) {
+        console.error('Supabase connection failed:', err);
+        updateCloudStatus('error', err.message);
+    }
+}
+
+async function fetchCloudTactics() {
+    if (!supabaseClient) return;
+    updateCloudStatus('syncing', 'Fetching tactics from cloud...');
+
+    const { data, error } = await supabaseClient
+        .from('tactics')
+        .select('*');
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+        tactics = data.map(fromDbRow);
+        localStorage.setItem('r6s_tactics', JSON.stringify(tactics));
+        renderTactics();
+        updateCloudStatus('connected', `${data.length} tactics synced with Supabase.`);
+    } else {
+        updateCloudStatus('connected', 'Connected! Cloud table is currently empty.');
+        if (tactics.length > 0) {
+            await uploadAllToCloud(false);
+        }
+    }
+}
+
+function subscribeToRealtime() {
+    if (!supabaseClient) return;
+    if (realtimeChannel) {
+        try { supabaseClient.removeChannel(realtimeChannel); } catch (e) {}
+    }
+
+    realtimeChannel = supabaseClient
+        .channel('public-tactics-sync')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tactics' }, (payload) => {
+            const { eventType, new: newRow, old: oldRow } = payload;
+            if (eventType === 'INSERT') {
+                const item = fromDbRow(newRow);
+                if (!tactics.some(t => t.id === item.id)) {
+                    tactics.unshift(item);
+                    localStorage.setItem('r6s_tactics', JSON.stringify(tactics));
+                    renderTactics();
+                    showToast('New tactic synced from cloud! ☁️', 'success');
+                }
+            } else if (eventType === 'UPDATE') {
+                const item = fromDbRow(newRow);
+                const idx = tactics.findIndex(t => t.id === item.id);
+                if (idx !== -1) {
+                    tactics[idx] = item;
+                    localStorage.setItem('r6s_tactics', JSON.stringify(tactics));
+                    renderTactics();
+                }
+            } else if (eventType === 'DELETE') {
+                if (oldRow && oldRow.id) {
+                    tactics = tactics.filter(t => t.id !== oldRow.id);
+                    localStorage.setItem('r6s_tactics', JSON.stringify(tactics));
+                    renderTactics();
+                    showToast('Tactic removed on another device 🗑️', 'info');
+                }
+            }
+        })
+        .subscribe((status) => {
+            if (status === 'SUBSCRIBED') {
+                updateCloudStatus('connected');
+            }
+        });
+}
+
+async function uploadAllToCloud(showToastMessage = true) {
+    if (!supabaseClient) {
+        showToast('Please connect to Supabase first!', 'error');
+        return;
+    }
+
+    updateCloudStatus('syncing', 'Uploading local tactics to Supabase...');
+    try {
+        const rows = tactics.map(toDbRow);
+        const { error } = await supabaseClient.from('tactics').upsert(rows);
+        if (error) throw error;
+
+        updateCloudStatus('connected', `All ${rows.length} tactics uploaded & synced with Supabase.`);
+        if (showToastMessage) {
+            showToast(`${rows.length} tactics uploaded to Cloud! 🚀`, 'success');
+        }
+    } catch (err) {
+        console.error('Upload to cloud error:', err);
+        updateCloudStatus('error', err.message);
+        showToast('Upload failed: ' + err.message, 'error');
+    }
+}
+
+function openCloudSyncModal() {
+    if (dom.inputSupabaseUrl) {
+        dom.inputSupabaseUrl.value = getSupabaseUrl();
+    }
+    if (dom.inputSupabaseKey) {
+        dom.inputSupabaseKey.value = getSupabaseKey();
+    }
+    if (dom.cloudSyncOverlay) {
+        dom.cloudSyncOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeCloudSyncModal() {
+    if (dom.cloudSyncOverlay) {
+        dom.cloudSyncOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+async function saveCloudCredentials() {
+    const url = (dom.inputSupabaseUrl ? dom.inputSupabaseUrl.value : '').trim();
+    const key = (dom.inputSupabaseKey ? dom.inputSupabaseKey.value : '').trim();
+
+    if (!url || !key) {
+        showToast('Please enter both Supabase URL and Anon Key!', 'error');
+        return;
+    }
+
+    localStorage.setItem('r6s_supabase_url', url);
+    localStorage.setItem('r6s_supabase_key', key);
+
+    await initSupabase(true);
+}
+
+function disconnectCloud() {
+    localStorage.removeItem('r6s_supabase_url');
+    localStorage.removeItem('r6s_supabase_key');
+    if (supabaseClient && realtimeChannel) {
+        try { supabaseClient.removeChannel(realtimeChannel); } catch (e) {}
+    }
+    supabaseClient = null;
+    realtimeChannel = null;
+
+    if (dom.inputSupabaseUrl) dom.inputSupabaseUrl.value = '';
+    if (dom.inputSupabaseKey) dom.inputSupabaseKey.value = '';
+
+    updateCloudStatus('local');
+    showToast('Disconnected from cloud. Using local storage.', 'info');
+}
+
+function copySqlSetupScript() {
+    navigator.clipboard.writeText(SQL_SETUP_SCRIPT).then(() => {
+        showToast('SQL Setup Script copied to clipboard! 📋', 'success');
+    }).catch(() => {
+        showToast('Could not copy automatically. Check documentation.', 'error');
+    });
 }
 
 // ===== TOAST =====
@@ -1832,6 +2179,12 @@ function showToast(message, type = 'success') {
 window.openEditModal = openEditModal;
 window.openDeleteModal = openDeleteModal;
 window.toggleFavorite = toggleFavorite;
+window.openCloudSyncModal = openCloudSyncModal;
+window.closeCloudSyncModal = closeCloudSyncModal;
+window.saveCloudCredentials = saveCloudCredentials;
+window.disconnectCloud = disconnectCloud;
+window.copySqlSetupScript = copySqlSetupScript;
+window.uploadAllToCloud = uploadAllToCloud;
 
 // ===== START =====
 document.addEventListener('DOMContentLoaded', init);
