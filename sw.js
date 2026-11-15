@@ -1,4 +1,4 @@
-const CACHE_NAME = 'r6-tactics-v9';
+const CACHE_NAME = 'r6-tactics-v10';
 const ASSETS = [
     './',
     './index.html',
@@ -10,7 +10,16 @@ const ASSETS = [
     './images/bg-mozzie.jpg',
     './images/bg-stadium.jpg',
     './images/bg-equipment.jpg',
-    './images/bg-maverick.jpg'
+    './images/bg-maverick.jpg',
+    './images/bg-mute.jpg',
+    './images/bg-hibana.jpg',
+    './images/bg-ram.jpg',
+    './images/bg-solis.jpg',
+    './images/bg-tubarao.jpg',
+    './images/bg-blackbeard.jpg',
+    './images/bg-skopos.jpg',
+    './images/bg-sledge.jpg',
+    './images/bg-solidsnake.jpg'
 ];
 
 // Install — cache core assets

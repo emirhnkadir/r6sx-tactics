@@ -977,12 +977,37 @@ function initBackgroundSlideshow() {
     const slides = $$('.bg-slide');
     if (!slides || slides.length <= 1) return;
     let currentSlide = 0;
+    let slideTimer = null;
 
-    setInterval(() => {
+    function nextSlide() {
         slides[currentSlide].classList.remove('active');
         currentSlide = (currentSlide + 1) % slides.length;
         slides[currentSlide].classList.add('active');
-    }, 7000);
+    }
+
+    function startTimer() {
+        if (!slideTimer) {
+            slideTimer = setInterval(nextSlide, 7000);
+        }
+    }
+
+    function stopTimer() {
+        if (slideTimer) {
+            clearInterval(slideTimer);
+            slideTimer = null;
+        }
+    }
+
+    startTimer();
+
+    // Pause when tab is not visible to conserve resources
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopTimer();
+        } else {
+            startTimer();
+        }
+    });
 }
 
 // ===== INIT =====
