@@ -14,27 +14,9 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
-    <!-- Cinematic Background Slideshow Layer (Crystal Clear with Dark Overlay) -->
-    <div class="bg-slideshow-container" aria-hidden="true">
-        <div class="bg-slide active" style="background-image: url('images/bg-mozzie.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-stadium.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-equipment.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-maverick.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-mute.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-hibana.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-ram.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-solis.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-tubarao.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-blackbeard.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-skopos.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-sledge.jpg');"></div>
-        <div class="bg-slide" style="background-image: url('images/bg-solidsnake.jpg');"></div>
-        <div class="bg-slideshow-overlay"></div>
-    </div>
-
     <!-- Header -->
     <header class="app-header">
         <div class="header-content">
@@ -203,10 +185,21 @@
     <!-- Empty State -->
     <div class="empty-state hidden" id="emptyState">
         <div class="empty-icon">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 2L36 11V29L20 38L4 29V11L20 2Z" transform="scale(0.5) translate(4,4)"/><circle cx="12" cy="12" r="8" opacity="0.3"/><line x1="8" y1="12" x2="16" y2="12" stroke-width="1.5" opacity="0.5"/></svg>
+            <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" stroke-dasharray="4 2" opacity="0.35"/>
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3" opacity="0.5"/>
+                <path d="M5 9.5a10 10 0 0 1 14 0" opacity="0.4"/>
+                <path d="M8.5 13a5 5 0 0 1 7 0" opacity="0.6"/>
+                <line x1="4" y1="4" x2="20" y2="20" stroke="var(--danger)" stroke-width="2"/>
+                <circle cx="12" cy="16.5" r="1.2" fill="currentColor"/>
+            </svg>
         </div>
-        <h3 id="emptyTitle">No tactics yet</h3>
-        <p id="emptyMessage">Click the "Add" button above to add your first tactic!</p>
+        <h3 id="emptyTitle">No intel found</h3>
+        <p id="emptyMessage">No intel found. Try adjusting your filters.</p>
+        <button type="button" class="btn-empty-clear" id="btnEmptyClear">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span>Clear Filters</span>
+        </button>
     </div>
 
     <!-- Add/Edit Modal -->
@@ -382,7 +375,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=11"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');

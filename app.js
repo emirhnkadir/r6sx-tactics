@@ -915,6 +915,7 @@ const dom = {
     emptyState: $('#emptyState'),
     emptyTitle: $('#emptyTitle'),
     emptyMessage: $('#emptyMessage'),
+    btnEmptyClear: $('#btnEmptyClear'),
     searchInput: $('#searchInput'),
     searchClear: $('#searchClear'),
     filterMap: $('#filterMap'),
@@ -972,51 +973,12 @@ const dom = {
     btnCopySql: $('#btnCopySql')
 };
 
-// ===== BACKGROUND SLIDESHOW =====
-function initBackgroundSlideshow() {
-    const slides = $$('.bg-slide');
-    if (!slides || slides.length <= 1) return;
-    let currentSlide = 0;
-    let slideTimer = null;
-
-    function nextSlide() {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }
-
-    function startTimer() {
-        if (!slideTimer) {
-            slideTimer = setInterval(nextSlide, 7000);
-        }
-    }
-
-    function stopTimer() {
-        if (slideTimer) {
-            clearInterval(slideTimer);
-            slideTimer = null;
-        }
-    }
-
-    startTimer();
-
-    // Pause when tab is not visible to conserve resources
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            stopTimer();
-        } else {
-            startTimer();
-        }
-    });
-}
-
 // ===== INIT =====
 function init() {
     loadTactics();
     populateFilterDropdowns();
     populateFormDropdowns();
     bindEvents();
-    initBackgroundSlideshow();
 
     isMatchMode = localStorage.getItem('r6s_match_mode') === 'true';
     if (dom.matchModeToggle) {
@@ -1248,6 +1210,9 @@ function bindEvents() {
     }
 
     dom.filterReset.addEventListener('click', resetFilters);
+    if (dom.btnEmptyClear) {
+        dom.btnEmptyClear.addEventListener('click', resetFilters);
+    }
 
     // Match Mode Toggle
     if (dom.matchModeToggle) {
@@ -1595,14 +1560,16 @@ function renderTactics() {
         dom.emptyState.classList.remove('hidden');
         dom.emptyTitle.textContent = 'No tactics yet';
         dom.emptyMessage.textContent = 'Click the "Add" button above to add your first tactic!';
+        if (dom.btnEmptyClear) dom.btnEmptyClear.classList.add('hidden');
         return;
     }
 
     if (filtered.length === 0) {
         dom.grid.classList.add('hidden');
         dom.emptyState.classList.remove('hidden');
-        dom.emptyTitle.textContent = 'No results found';
-        dom.emptyMessage.textContent = 'Try changing your filters or updating your search term.';
+        dom.emptyTitle.textContent = 'No intel found';
+        dom.emptyMessage.textContent = 'No intel found. Try adjusting your filters.';
+        if (dom.btnEmptyClear) dom.btnEmptyClear.classList.remove('hidden');
         return;
     }
 
@@ -1658,7 +1625,7 @@ function renderTactics() {
         const isJustPinned = t.id === lastPinnedId;
 
         return `
-        <div class="tactic-card ${t.isFavorite ? 'is-favorite' : ''} ${isJustPinned ? 'just-pinned' : ''}" style="--card-accent: ${categoryColor}; animation-delay: ${Math.min(i * 0.03, 0.3)}s">
+        <div class="tactic-card ${t.isFavorite ? 'is-favorite' : ''} ${isJustPinned ? 'just-pinned' : ''}" data-role="${escapeHtml(t.role || 'Defender')}" style="--card-accent: ${categoryColor}; animation-delay: ${Math.min(i * 0.03, 0.3)}s">
             <div class="card-header">
                 <div class="card-header-left">
                     <img class="card-op-icon ${t.operator && t.operator !== 'ANY' ? 'badge-clickable' : ''} ${isOpActive ? 'is-active' : ''}" 
