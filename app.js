@@ -898,7 +898,6 @@ let tactics = [];
 let editingId = null;
 let deleteTargetId = null;
 let isMatchMode = false;
-let videoZoomLevel = 0;
 let lastPinnedId = null;
 
 // ===== DOM REFS =====
@@ -946,18 +945,7 @@ const dom = {
     matchMapSelect: $('#matchMapSelect'),
     matchRoleSegmented: $('#matchRoleSegmented'),
     matchFloorSegmented: $('#matchFloorSegmented'),
-    btnFloor3F: $('#btnFloor3F'),
-    // Video Player Modal DOM elements
-    videoModalOverlay: $('#videoModalOverlay'),
-    videoModal: $('#videoModal'),
-    videoModalTitle: $('#videoModalTitle'),
-    videoModalMeta: $('#videoModalMeta'),
-    videoZoomBtn: $('#videoZoomBtn'),
-    videoZoomText: $('#videoZoomText'),
-    videoFallbackBtn: $('#videoFallbackBtn'),
-    videoFallbackText: $('#videoFallbackText'),
-    videoModalClose: $('#videoModalClose'),
-    videoPlayerContainer: $('#videoPlayerContainer')
+    btnFloor3F: $('#btnFloor3F')
 };
 
 // ===== INIT =====
@@ -1247,32 +1235,10 @@ function bindEvents() {
         });
     }
 
-    // Clickable Badges & Video Link delegation on tactics grid
+    // Clickable Badges delegation on tactics grid
     dom.grid.addEventListener('click', (e) => {
-        const cardLink = e.target.closest('.card-link');
-        if (cardLink) {
-            e.preventDefault();
-            const tacticId = cardLink.dataset.tacticId;
-            if (tacticId) {
-                openVideoModal(tacticId, e);
-                return;
-            }
-        }
         handleBadgeClick(e);
     });
-
-    // Video Modal events
-    if (dom.videoZoomBtn) {
-        dom.videoZoomBtn.addEventListener('click', toggleVideoZoom);
-    }
-    if (dom.videoModalClose) {
-        dom.videoModalClose.addEventListener('click', closeVideoModal);
-    }
-    if (dom.videoModalOverlay) {
-        dom.videoModalOverlay.addEventListener('click', (e) => {
-            if (e.target === dom.videoModalOverlay) closeVideoModal();
-        });
-    }
 
     // Modal
     $('#modalClose').addEventListener('click', closeModal);
@@ -1307,7 +1273,6 @@ function bindEvents() {
             closeModal();
             closeDeleteModal();
             dom.importOverlay.classList.add('hidden');
-            closeVideoModal();
         }
     });
 }
@@ -1398,7 +1363,7 @@ function handleBadgeClick(e) {
     const badge = e.target.closest('.badge-clickable');
     if (!badge) return;
 
-    if (e.target.closest('.btn-card-edit') || e.target.closest('.btn-card-delete') || e.target.closest('.btn-card-fav') || e.target.closest('.card-link')) {
+    if (e.target.closest('.btn-card-edit') || e.target.closest('.btn-card-delete') || e.target.closest('.btn-card-fav') || e.target.closest('.card-video-btn')) {
         return;
     }
 
@@ -1605,10 +1570,16 @@ function renderTactics() {
                     ${escapeHtml(t.category)}
                 </span>
             </div>
-            <a href="${escapeHtml(t.link)}" class="card-link" data-tactic-id="${t.id}" onclick="openVideoModal('${t.id}', event)" title="Watch Video">
-                <span class="link-platform ${platform.class}">${platform.icon} ${platform.name}</span>
-                <span>${escapeHtml(shortenUrl(t.link))}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="margin-left:auto;flex-shrink:0"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            <a href="${escapeHtml(t.link)}" target="_blank" rel="noopener noreferrer" class="card-video-btn ${platform.class}" title="Watch video on ${platform.name}">
+                <span class="btn-video-brand">
+                    ${platform.class === 'youtube' ? `
+                    <svg class="btn-platform-svg yt-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    ` : `
+                    <svg class="btn-platform-svg ig-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    `}
+                    <span>Watch on ${platform.name}</span>
+                </span>
+                <span class="btn-external-arrow">↗</span>
             </a>
         </div>`;
     }).join('');
@@ -1616,9 +1587,9 @@ function renderTactics() {
 
 // ===== HELPERS =====
 function detectPlatform(url) {
-    if (url.includes('instagram.com')) return { name: 'IG', icon: '📸', class: 'instagram' };
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return { name: 'YT', icon: '▶️', class: 'youtube' };
-    return { name: 'Link', icon: '🔗', class: 'other' };
+    if (!url) return { name: 'Instagram', icon: '📸', class: 'instagram' };
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return { name: 'YouTube', icon: '▶️', class: 'youtube' };
+    return { name: 'Instagram', icon: '📸', class: 'instagram' };
 }
 
 function getCategoryColor(category) {
@@ -1661,156 +1632,6 @@ function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
-}
-
-// ===== VIDEO EMBED & MODAL =====
-function getEmbedInfo(url) {
-    if (!url) return null;
-    const trimmed = url.trim();
-
-    // Instagram: reels, reel, p, or tv
-    const igMatch = trimmed.match(/instagram\.com\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/i);
-    if (igMatch) {
-        return {
-            type: 'instagram',
-            embedUrl: `https://www.instagram.com/reel/${igMatch[1]}/embed/`,
-            platformName: 'Instagram',
-            isVertical: true
-        };
-    }
-
-    // YouTube Shorts: youtube.com/shorts/ID
-    const ytShortsMatch = trimmed.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/i);
-    if (ytShortsMatch) {
-        return {
-            type: 'youtube',
-            embedUrl: `https://www.youtube.com/embed/${ytShortsMatch[1]}?autoplay=1`,
-            platformName: 'YouTube Shorts',
-            isVertical: true
-        };
-    }
-
-    // YouTube standard watch, embed, or youtu.be
-    const ytMatch = trimmed.match(/(?:youtube\.com\/(?:watch\?.*v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
-    if (ytMatch) {
-        return {
-            type: 'youtube',
-            embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`,
-            platformName: 'YouTube',
-            isVertical: false
-        };
-    }
-
-    return null;
-}
-
-function setVideoZoom(level) {
-    videoZoomLevel = level;
-    if (!dom.videoModal) return;
-    dom.videoModal.classList.remove('is-zoomed-13', 'is-zoomed-15');
-
-    if (videoZoomLevel === 1) {
-        dom.videoModal.classList.add('is-zoomed-13');
-        if (dom.videoZoomBtn) dom.videoZoomBtn.classList.add('active');
-        if (dom.videoZoomText) dom.videoZoomText.textContent = 'Zoom 1.5x';
-    } else if (videoZoomLevel === 2) {
-        dom.videoModal.classList.add('is-zoomed-15');
-        if (dom.videoZoomBtn) dom.videoZoomBtn.classList.add('active');
-        if (dom.videoZoomText) dom.videoZoomText.textContent = 'Reset (1x)';
-    } else {
-        videoZoomLevel = 0;
-        if (dom.videoZoomBtn) dom.videoZoomBtn.classList.remove('active');
-        if (dom.videoZoomText) dom.videoZoomText.textContent = 'Zoom 1.3x';
-    }
-}
-
-function toggleVideoZoom() {
-    const nextLevel = (videoZoomLevel + 1) % 3;
-    setVideoZoom(nextLevel);
-}
-
-function openVideoModal(id, e) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    const tactic = tactics.find(t => t.id === id);
-    if (!tactic) return;
-
-    // Reset zoom state
-    setVideoZoom(0);
-
-    const embed = getEmbedInfo(tactic.link);
-
-    // Title
-    const siteStr = tactic.site ? ` — ${tactic.site}` : '';
-    dom.videoModalTitle.textContent = `${tactic.map}${siteStr}`;
-
-    // Meta Badges
-    const roleIcon = tactic.role === 'Attacker' ? '⚔️' : '🛡️';
-    const floorLabel = tactic.floor && tactic.floor !== 'ANY' ? tactic.floor : '';
-    const operatorIcon = getOperatorIcon(tactic.operator);
-
-    dom.videoModalMeta.innerHTML = `
-        <span class="tag" style="background:rgba(255,255,255,0.06);color:var(--text-primary);border:1px solid var(--border-color)">${escapeHtml(tactic.map)}</span>
-        ${floorLabel ? `<span class="badge-floor" style="margin-left:0">${escapeHtml(floorLabel)}</span>` : ''}
-        ${tactic.role ? `<span class="tag" style="background:${tactic.role === 'Attacker' ? 'rgba(239,83,80,0.12)' : 'rgba(66,165,245,0.12)'};color:${tactic.role === 'Attacker' ? '#ef5350' : '#42a5f5'};border:1px solid ${tactic.role === 'Attacker' ? 'rgba(239,83,80,0.25)' : 'rgba(66,165,245,0.25)'}">${roleIcon} ${escapeHtml(tactic.role)}</span>` : ''}
-        ${tactic.operator && tactic.operator !== 'ANY' ? `<span class="tag tag-operator"><img class="tag-op-icon" src="${operatorIcon}" alt="" onerror="this.style.display='none'"> ${escapeHtml(tactic.operator)}</span>` : ''}
-        <span class="tag tag-category" data-category="${escapeHtml(tactic.category)}">${escapeHtml(tactic.category)}</span>
-    `;
-
-    // Fallback button
-    dom.videoFallbackBtn.href = tactic.link;
-    if (embed && embed.type === 'youtube') {
-        dom.videoFallbackText.textContent = 'Open in YouTube ↗';
-    } else {
-        dom.videoFallbackText.textContent = 'Open in Instagram ↗';
-    }
-
-    // Modal width styling
-    if (embed && embed.type === 'youtube' && !embed.isVertical) {
-        dom.videoModal.classList.add('video-horizontal');
-    } else {
-        dom.videoModal.classList.remove('video-horizontal');
-    }
-
-    // Inject iframe (or fallback)
-    if (embed && embed.embedUrl) {
-        dom.videoPlayerContainer.innerHTML = `
-            <iframe 
-                src="${escapeHtml(embed.embedUrl)}" 
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" 
-                allowfullscreen="true" 
-                scrolling="yes" 
-                frameborder="0"
-                title="${escapeHtml(tactic.map)} - ${escapeHtml(tactic.site || '')}">
-            </iframe>
-        `;
-    } else {
-        dom.videoPlayerContainer.innerHTML = `
-            <div class="video-embed-error">
-                <p>This video link cannot be embedded directly.</p>
-                <a href="${escapeHtml(tactic.link)}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-top:14px;display:inline-flex;">
-                    Open Video in New Tab ↗
-                </a>
-            </div>
-        `;
-    }
-
-    dom.videoModalOverlay.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeVideoModal() {
-    if (!dom.videoModalOverlay) return;
-    setVideoZoom(0);
-    dom.videoModalOverlay.classList.add('hidden');
-    document.body.style.overflow = '';
-    // Empty the player container to destroy iframe and immediately stop video & audio
-    if (dom.videoPlayerContainer) {
-        dom.videoPlayerContainer.innerHTML = '';
-    }
 }
 
 // ===== MODAL =====
@@ -2010,9 +1831,6 @@ function showToast(message, type = 'success') {
 // ===== MAKE FUNCTIONS GLOBAL FOR ONCLICK =====
 window.openEditModal = openEditModal;
 window.openDeleteModal = openDeleteModal;
-window.openVideoModal = openVideoModal;
-window.closeVideoModal = closeVideoModal;
-window.toggleVideoZoom = toggleVideoZoom;
 window.toggleFavorite = toggleFavorite;
 
 // ===== START =====

@@ -14,7 +14,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
     <!-- Header -->
@@ -293,43 +293,12 @@
         </div>
     </div>
 
-    <!-- Video Player Modal -->
-    <div class="modal-overlay hidden" id="videoModalOverlay">
-        <div class="video-modal" id="videoModal">
-            <div class="video-modal-header">
-                <div class="video-modal-info">
-                    <div class="video-modal-title" id="videoModalTitle"></div>
-                    <div class="video-modal-meta" id="videoModalMeta"></div>
-                </div>
-                <div class="video-modal-actions">
-                    <button type="button" class="btn-video-zoom" id="videoZoomBtn" title="Toggle Zoom / Cinema Mode">
-                        <span class="zoom-icon">🔍</span>
-                        <span id="videoZoomText">Zoom 1.3x</span>
-                    </button>
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="btn-external-fallback" id="videoFallbackBtn" title="Open in original platform">
-                        <span id="videoFallbackText">Open in Instagram</span>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
-                    <button class="btn-icon video-modal-close" id="videoModalClose" title="Close (Esc)">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    </button>
-                </div>
-            </div>
-            <div class="video-modal-body" id="videoModalBody">
-                <div class="video-player-container" id="videoPlayerContainer"></div>
-            </div>
-            <div class="video-modal-footer">
-                <span class="video-hint">Tip: If embed is restricted, click the external link above.</span>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast Notification -->
     <div class="toast hidden" id="toast">
         <span id="toastMessage"></span>
     </div>
 
-    <script src="app.js?v=4"></script>
+    <script src="app.js?v=5"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
