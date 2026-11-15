@@ -891,7 +891,7 @@ const DEFAULT_TACTICS = [
     }
 ];
 
-const DATA_VERSION = 3;
+const DATA_VERSION = 4;
 
 // ===== APP STATE =====
 let tactics = [];
@@ -899,6 +899,7 @@ let editingId = null;
 let deleteTargetId = null;
 let isMatchMode = false;
 let videoZoomLevel = 0;
+let lastPinnedId = null;
 
 // ===== DOM REFS =====
 const $ = (sel) => document.querySelector(sel);
@@ -917,6 +918,7 @@ const dom = {
     filterFloor: $('#filterFloor'),
     filterRole: $('#filterRole'),
     filterReset: $('#filterReset'),
+    sortSelect: $('#sortSelect'),
     resultsCount: $('#resultsCount'),
     modalOverlay: $('#modalOverlay'),
     modalTitle: $('#modalTitle'),
@@ -969,6 +971,10 @@ function init() {
     if (dom.matchModeToggle) {
         dom.matchModeToggle.checked = isMatchMode;
     }
+    const savedSort = localStorage.getItem('r6s_sort_by');
+    if (dom.sortSelect && savedSort) {
+        dom.sortSelect.value = savedSort;
+    }
     updateMatchModeUI();
     syncFilterUI();
     renderTactics();
@@ -1001,6 +1007,32 @@ function loadTactics() {
     } else {
         tactics = [...DEFAULT_TACTICS];
         localStorage.setItem('r6s_data_version', DATA_VERSION.toString());
+        saveTactics();
+    }
+
+    // Ensure all tactics have isFavorite and createdAt backward-compatible fallback
+    const baseTime = Date.now() - tactics.length * 60000;
+    let modified = false;
+    tactics = tactics.map((t, idx) => {
+        let updated = false;
+        let isFav = t.isFavorite;
+        let cAt = t.createdAt;
+        if (typeof isFav !== 'boolean') {
+            isFav = false;
+            updated = true;
+        }
+        if (typeof cAt !== 'number' || isNaN(cAt)) {
+            cAt = baseTime + idx * 60000;
+            updated = true;
+        }
+        if (updated) {
+            modified = true;
+            return { ...t, isFavorite: isFav, createdAt: cAt };
+        }
+        return t;
+    });
+
+    if (modified) {
         saveTactics();
     }
 }
@@ -1153,6 +1185,15 @@ function bindEvents() {
         });
     });
 
+    // Sort
+    if (dom.sortSelect) {
+        dom.sortSelect.addEventListener('change', () => {
+            localStorage.setItem('r6s_sort_by', dom.sortSelect.value);
+            syncFilterUI();
+            renderTactics();
+        });
+    }
+
     dom.filterReset.addEventListener('click', resetFilters);
 
     // Match Mode Toggle
@@ -1304,6 +1345,10 @@ function syncFilterUI() {
         sel.classList.toggle('active', !!sel.value);
     });
 
+    if (dom.sortSelect) {
+        dom.sortSelect.classList.toggle('active', dom.sortSelect.value !== 'newest');
+    }
+
     // 2. Map Lock in Match Mode
     if (dom.matchMapSelect) {
         dom.matchMapSelect.value = dom.filterMap.value;
@@ -1353,7 +1398,7 @@ function handleBadgeClick(e) {
     const badge = e.target.closest('.badge-clickable');
     if (!badge) return;
 
-    if (e.target.closest('.btn-card-edit') || e.target.closest('.btn-card-delete') || e.target.closest('.card-link')) {
+    if (e.target.closest('.btn-card-edit') || e.target.closest('.btn-card-delete') || e.target.closest('.btn-card-fav') || e.target.closest('.card-link')) {
         return;
     }
 
@@ -1394,8 +1439,10 @@ function getFilteredTactics() {
     const catFilter = dom.filterCategory.value;
     const floorFilter = dom.filterFloor.value;
     const roleFilter = dom.filterRole.value;
+    const sortVal = dom.sortSelect ? dom.sortSelect.value : 'newest';
 
     return tactics.filter(t => {
+        if (sortVal === 'favOnly' && !t.isFavorite) return false;
         if (mapFilter) {
             const tMap = (t.map || '').trim();
             if (isMatchMode) {
@@ -1419,9 +1466,11 @@ function getFilteredTactics() {
 
 function renderTactics() {
     const filtered = getFilteredTactics();
+    const favCount = tactics.filter(t => t.isFavorite).length;
 
-    // Update count
-    dom.resultsCount.textContent = `${filtered.length} / ${tactics.length} tactics showing`;
+    // Update count with pinned indicator
+    const favText = favCount > 0 ? ` • ${favCount} pinned ⭐` : '';
+    dom.resultsCount.textContent = `${filtered.length} / ${tactics.length} tactics showing${favText}`;
 
     // Empty state
     if (tactics.length === 0) {
@@ -1443,18 +1492,38 @@ function renderTactics() {
     dom.emptyState.classList.add('hidden');
     dom.grid.classList.remove('hidden');
 
-    filtered.sort((a, b) => {
-        const mapA = (a.map || '').toUpperCase() === 'ANY' ? '' : (a.map || '').toUpperCase();
-        const mapB = (b.map || '').toUpperCase() === 'ANY' ? '' : (b.map || '').toUpperCase();
+    const sortMethod = (dom.sortSelect && dom.sortSelect.value) ? dom.sortSelect.value : 'newest';
 
-        if (mapA !== mapB) {
-            return mapA.localeCompare(mapB);
+    filtered.sort((a, b) => {
+        // KESİN KURAL: isFavorite === true her zaman en üstte
+        const favA = a.isFavorite ? 1 : 0;
+        const favB = b.isFavorite ? 1 : 0;
+        if (favA !== favB) {
+            return favB - favA; // 1 (favori) daima önce gelir
         }
 
-        const opA = (a.operator || '').toUpperCase() === 'ANY' || (a.operator || '').toUpperCase() === 'GENERAL' ? '' : (a.operator || '').toUpperCase();
-        const opB = (b.operator || '').toUpperCase() === 'ANY' || (b.operator || '').toUpperCase() === 'GENERAL' ? '' : (b.operator || '').toUpperCase();
-
-        return opA.localeCompare(opB);
+        // İkisi de favori veya ikisi de favori değil -> seçilen metoda göre sırala
+        if (sortMethod === 'az') {
+            const mapA = (a.map || '').toUpperCase() === 'ANY' ? 'ZZZ' : (a.map || '').toUpperCase();
+            const mapB = (b.map || '').toUpperCase() === 'ANY' ? 'ZZZ' : (b.map || '').toUpperCase();
+            if (mapA !== mapB) {
+                return mapA.localeCompare(mapB);
+            }
+            const opA = (a.operator || '').toUpperCase() === 'ANY' || (a.operator || '').toUpperCase() === 'GENERAL' ? 'ZZZ' : (a.operator || '').toUpperCase();
+            const opB = (b.operator || '').toUpperCase() === 'ANY' || (b.operator || '').toUpperCase() === 'GENERAL' ? 'ZZZ' : (b.operator || '').toUpperCase();
+            if (opA !== opB) {
+                return opA.localeCompare(opB);
+            }
+            return (a.site || '').localeCompare(b.site || '');
+        } else {
+            // 'newest' (veya 'favOnly'): createdAt azalan (en yeni en üstte)
+            const timeA = typeof a.createdAt === 'number' ? a.createdAt : 0;
+            const timeB = typeof b.createdAt === 'number' ? b.createdAt : 0;
+            if (timeB !== timeA) {
+                return timeB - timeA;
+            }
+            return (b.id || '').localeCompare(a.id || '');
+        }
     });
 
     dom.grid.innerHTML = filtered.map((t, i) => {
@@ -1469,9 +1538,10 @@ function renderTactics() {
         const isRoleActive = dom.filterRole.value && dom.filterRole.value === t.role;
         const isOpActive = dom.filterOperator.value && dom.filterOperator.value === t.operator;
         const isCatActive = dom.filterCategory.value && dom.filterCategory.value === t.category;
+        const isJustPinned = t.id === lastPinnedId;
 
         return `
-        <div class="tactic-card" style="--card-accent: ${categoryColor}; animation-delay: ${i * 0.05}s">
+        <div class="tactic-card ${t.isFavorite ? 'is-favorite' : ''} ${isJustPinned ? 'just-pinned' : ''}" style="--card-accent: ${categoryColor}; animation-delay: ${Math.min(i * 0.03, 0.3)}s">
             <div class="card-header">
                 <div class="card-header-left">
                     <img class="card-op-icon ${t.operator && t.operator !== 'ANY' ? 'badge-clickable' : ''} ${isOpActive ? 'is-active' : ''}" 
@@ -1490,11 +1560,19 @@ function renderTactics() {
                                   data-badge-type="floor" 
                                   data-badge-value="${escapeHtml(t.floor)}" 
                                   title="Filter by floor: ${escapeHtml(t.floor)}">${escapeHtml(floorLabel)}</span>` : ''}
+                            ${t.isFavorite ? `<span class="badge-pinned" title="Pinned to top">⭐ PINNED</span>` : ''}
                         </div>
                         ${t.site ? `<div class="card-site-inline">${escapeHtml(t.site)}</div>` : ''}
                     </div>
                 </div>
                 <div class="card-actions">
+                    <button class="btn-card-fav ${t.isFavorite ? 'is-fav' : ''}" 
+                            onclick="toggleFavorite('${t.id}', event)" 
+                            title="${t.isFavorite ? 'Remove from favorites' : 'Pin to favorites'}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="${t.isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </button>
                     <button class="btn-card-edit" onclick="openEditModal('${t.id}')" title="Edit">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
@@ -1787,11 +1865,18 @@ function handleFormSubmit(e) {
     if (editingId) {
         const idx = tactics.findIndex(t => t.id === editingId);
         if (idx !== -1) {
-            tactics[idx] = { ...tactics[idx], ...data };
+            tactics[idx] = {
+                ...tactics[idx],
+                ...data,
+                isFavorite: typeof tactics[idx].isFavorite === 'boolean' ? tactics[idx].isFavorite : false,
+                createdAt: typeof tactics[idx].createdAt === 'number' ? tactics[idx].createdAt : Date.now()
+            };
             showToast('Tactic updated! ✅', 'success');
         }
     } else {
         data.id = generateId();
+        data.isFavorite = false;
+        data.createdAt = Date.now();
         tactics.unshift(data);
         showToast('New tactic added! 🎯', 'success');
     }
@@ -1812,6 +1897,26 @@ function detectRole(operator) {
     if (!operator || operator === 'ANY' || operator === 'general') return 'Defender';
     if (R6S_OPERATORS.attackers.includes(operator)) return 'Attacker';
     return 'Defender';
+}
+
+// ===== FAVORITE (PIN) =====
+function toggleFavorite(id, e) {
+    if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+    const tactic = tactics.find(t => t.id === id);
+    if (!tactic) return;
+
+    tactic.isFavorite = !tactic.isFavorite;
+    if (tactic.isFavorite) {
+        lastPinnedId = id;
+    } else if (lastPinnedId === id) {
+        lastPinnedId = null;
+    }
+    saveTactics();
+    renderTactics();
+    showToast(tactic.isFavorite ? 'Pinned to favorites ⭐' : 'Removed from favorites', tactic.isFavorite ? 'success' : 'info');
 }
 
 // ===== DELETE =====
@@ -1863,9 +1968,11 @@ function importData() {
             const data = JSON.parse(e.target.result);
             if (!Array.isArray(data)) throw new Error('Invalid format');
 
-            // Merge — add IDs to any missing
-            data.forEach(t => {
+            // Merge — add IDs, isFavorite and createdAt to any missing
+            data.forEach((t, i) => {
                 if (!t.id) t.id = generateId();
+                if (typeof t.isFavorite !== 'boolean') t.isFavorite = false;
+                if (typeof t.createdAt !== 'number') t.createdAt = Date.now() - (data.length - i) * 1000;
             });
 
             tactics = [...data, ...tactics];
@@ -1906,6 +2013,7 @@ window.openDeleteModal = openDeleteModal;
 window.openVideoModal = openVideoModal;
 window.closeVideoModal = closeVideoModal;
 window.toggleVideoZoom = toggleVideoZoom;
+window.toggleFavorite = toggleFavorite;
 
 // ===== START =====
 document.addEventListener('DOMContentLoaded', init);

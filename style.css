@@ -648,6 +648,23 @@ body::before {
     background-color: var(--accent-glow);
 }
 
+.sort-select {
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.sort-select:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.sort-select.active {
+    border-color: #f59e0b;
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.08);
+}
+
 .filter-reset {
     display: flex;
     align-items: center;
@@ -845,6 +862,106 @@ body::before {
 .card-actions .btn-card-delete:hover {
     background: rgba(239, 83, 80, 0.15);
     color: var(--danger);
+}
+
+.card-actions .btn-card-fav {
+    position: relative;
+    color: var(--text-muted);
+}
+
+.card-actions .btn-card-fav:hover {
+    background: rgba(245, 158, 11, 0.18);
+    color: #f59e0b;
+    transform: scale(1.12);
+}
+
+.card-actions .btn-card-fav.is-fav {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+    opacity: 1 !important;
+}
+
+.card-actions .btn-card-fav.is-fav svg {
+    fill: #f59e0b;
+    animation: starPulse 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes starPulse {
+    0% { transform: scale(0.6); }
+    50% { transform: scale(1.35); }
+    100% { transform: scale(1); }
+}
+
+/* Card pinned styling */
+.tactic-card.is-favorite {
+    border-color: rgba(245, 158, 11, 0.4);
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.05) 0%, var(--bg-card) 100%);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.09);
+}
+
+.tactic-card.is-favorite:hover {
+    border-color: rgba(245, 158, 11, 0.65);
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.18);
+}
+
+.tactic-card.is-favorite::before {
+    background: linear-gradient(90deg, #f59e0b, var(--card-accent, var(--accent)), transparent);
+    opacity: 0.95;
+    height: 3px;
+}
+
+.tactic-card.is-favorite .card-actions {
+    opacity: 1;
+}
+
+.tactic-card.is-favorite .card-actions .btn-card-edit,
+.tactic-card.is-favorite .card-actions .btn-card-delete {
+    opacity: 0.4;
+}
+
+.tactic-card.is-favorite:hover .card-actions .btn-card-edit,
+.tactic-card.is-favorite:hover .card-actions .btn-card-delete {
+    opacity: 1;
+}
+
+/* Pinned badge in header */
+.badge-pinned {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Smooth pin pulse glow animation */
+@keyframes pinGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+        transform: scale(0.98);
+    }
+    50% {
+        box-shadow: 0 0 25px 4px rgba(245, 158, 11, 0.35);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1);
+        transform: scale(1);
+    }
+}
+
+.tactic-card.just-pinned {
+    animation: pinGlow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-site {
