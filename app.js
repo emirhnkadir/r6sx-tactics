@@ -902,6 +902,9 @@ let lastPinnedId = null;
 let supabaseClient = null;
 let realtimeChannel = null;
 let cloudStatus = 'local';
+let isAdmin = localStorage.getItem('r6s_is_admin') === 'true';
+let logoClickCount = 0;
+let logoClickTimer = null;
 
 // ===== DOM REFS =====
 const $ = (sel) => document.querySelector(sel);
@@ -922,6 +925,10 @@ const dom = {
     filterReset: $('#filterReset'),
     sortSelect: $('#sortSelect'),
     resultsCount: $('#resultsCount'),
+    btnAdd: $('#btnAdd'),
+    btnImport: $('#btnImport'),
+    btnExport: $('#btnExport'),
+    adminBadge: $('#adminBadge'),
     modalOverlay: $('#modalOverlay'),
     modalTitle: $('#modalTitle'),
     tacticForm: $('#tacticForm'),
@@ -981,6 +988,7 @@ function init() {
         dom.sortSelect.value = savedSort;
     }
     updateMatchModeUI();
+    updateAdminUI();
     syncFilterUI();
     renderTactics();
     initSupabase();
@@ -1319,6 +1327,67 @@ function bindEvents() {
             closeCloudSyncModal();
         }
     });
+
+    // Logo Secret Trigger for Admin Mode (double click or 3 rapid clicks)
+    const logoArea = $('.logo-area');
+    if (logoArea) {
+        logoArea.addEventListener('click', () => {
+            logoClickCount++;
+            if (logoClickTimer) clearTimeout(logoClickTimer);
+            if (logoClickCount >= 3) {
+                logoClickCount = 0;
+                handleLogoSecretTrigger();
+            } else {
+                logoClickTimer = setTimeout(() => {
+                    logoClickCount = 0;
+                }, 700);
+            }
+        });
+        logoArea.addEventListener('dblclick', () => {
+            logoClickCount = 0;
+            handleLogoSecretTrigger();
+        });
+    }
+    if (dom.adminBadge) {
+        dom.adminBadge.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleLogoSecretTrigger();
+        });
+    }
+}
+
+function updateAdminUI() {
+    const adminControls = [dom.btnAdd, dom.btnImport, dom.btnExport, dom.btnCloudSync];
+    adminControls.forEach(el => {
+        if (el) el.classList.toggle('hidden', !isAdmin);
+    });
+    if (dom.adminBadge) {
+        dom.adminBadge.classList.toggle('hidden', !isAdmin);
+    }
+}
+
+function handleLogoSecretTrigger() {
+    if (isAdmin) {
+        if (confirm('Admin Mode is currently active.\nDo you want to log out of Admin Mode?')) {
+            isAdmin = false;
+            localStorage.setItem('r6s_is_admin', 'false');
+            updateAdminUI();
+            renderTactics();
+            showToast('Logged out of Admin mode 🔒', 'info');
+        }
+        return;
+    }
+    const password = prompt('Enter Admin Password:');
+    if (password === null) return;
+    if (password === 'admin123') {
+        isAdmin = true;
+        localStorage.setItem('r6s_is_admin', 'true');
+        updateAdminUI();
+        renderTactics();
+        showToast('Admin mode activated! 🔓', 'success');
+    } else {
+        showToast('Incorrect password! ❌', 'error');
+    }
 }
 
 function updateMatchModeUI() {
@@ -1582,12 +1651,14 @@ function renderTactics() {
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
                     </button>
+                    ${isAdmin ? `
                     <button class="btn-card-edit" onclick="openEditModal('${t.id}')" title="Edit">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                     <button class="btn-card-delete" onclick="openDeleteModal('${t.id}')" title="Delete">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
                     </button>
+                    ` : ''}
                 </div>
             </div>
             <div class="card-tags">
@@ -1680,6 +1751,10 @@ function escapeHtml(str) {
 
 // ===== MODAL =====
 function openAddModal() {
+    if (!isAdmin) {
+        showToast('Admin permission required! 🔒', 'error');
+        return;
+    }
     editingId = null;
     dom.modalTitle.textContent = 'Add New Tactic';
     dom.btnSubmitText.textContent = 'Save';
@@ -1689,6 +1764,10 @@ function openAddModal() {
 }
 
 function openEditModal(id) {
+    if (!isAdmin) {
+        showToast('Admin permission required! 🔒', 'error');
+        return;
+    }
     const tactic = tactics.find(t => t.id === id);
     if (!tactic) return;
 
@@ -1801,6 +1880,10 @@ function toggleFavorite(id, e) {
 
 // ===== DELETE =====
 function openDeleteModal(id) {
+    if (!isAdmin) {
+        showToast('Admin permission required! 🔒', 'error');
+        return;
+    }
     deleteTargetId = id;
     const tactic = tactics.find(t => t.id === id);
     if (!tactic) return;
@@ -1832,6 +1915,10 @@ function confirmDelete() {
 
 // ===== IMPORT / EXPORT =====
 function exportData() {
+    if (!isAdmin) {
+        showToast('Admin permission required! 🔒', 'error');
+        return;
+    }
     const blob = new Blob([JSON.stringify(tactics, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1843,6 +1930,10 @@ function exportData() {
 }
 
 function importData() {
+    if (!isAdmin) {
+        showToast('Admin permission required! 🔒', 'error');
+        return;
+    }
     const file = dom.importFile.files[0];
     if (!file) {
         showToast('Please select a file!', 'error');
@@ -1955,6 +2046,7 @@ function updateCloudStatus(status, message) {
     cloudStatus = status;
     if (dom.btnCloudSync) {
         dom.btnCloudSync.className = `btn-icon btn-cloud-sync ${status}`;
+        dom.btnCloudSync.classList.toggle('hidden', !isAdmin);
     }
 
     if (dom.cloudStatusBanner) {
@@ -2105,6 +2197,10 @@ async function uploadAllToCloud(showToastMessage = true) {
 }
 
 function openCloudSyncModal() {
+    if (!isAdmin) {
+        showToast('Admin permission required! 🔒', 'error');
+        return;
+    }
     if (dom.inputSupabaseUrl) {
         dom.inputSupabaseUrl.value = getSupabaseUrl();
     }
