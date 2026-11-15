@@ -1,12 +1,11 @@
-const CACHE_NAME = 'r6sx-tactics-v2';
+const CACHE_NAME = 'r6sx-tactics-v3';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
     './app.js',
     './manifest.json',
-    './icon-192.png',
-    './icon-512.png'
+    './icon.svg'
 ];
 
 // Install — cache core assets
