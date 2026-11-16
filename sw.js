@@ -1,4 +1,4 @@
-const CACHE_NAME = 'r6-tactics-v12';
+const CACHE_NAME = 'r6-tactics-v13';
 const ASSETS = [
     './',
     './index.html',

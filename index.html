@@ -14,11 +14,13 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="stylesheet" href="style.css?v=12">
+    <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
-    <!-- Header -->
-    <header class="app-header">
+    <!-- Smart Sticky Header & Filters Container -->
+    <div class="top-nav-wrapper" id="topNavWrapper">
+        <!-- Header -->
+        <header class="app-header">
         <div class="header-content">
             <div class="logo-area">
                 <div class="logo-icon">
@@ -176,6 +178,7 @@
         </div>
         <div class="results-count" id="resultsCount"></div>
     </section>
+    </div>
 
     <!-- Tactics Grid -->
     <main class="tactics-grid" id="tacticsGrid">
@@ -375,7 +378,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="app.js?v=12"></script>
+    <script src="app.js?v=13"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');

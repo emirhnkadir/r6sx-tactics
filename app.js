@@ -911,6 +911,7 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
 const dom = {
+    topNavWrapper: $('#topNavWrapper'),
     grid: $('#tacticsGrid'),
     emptyState: $('#emptyState'),
     emptyTitle: $('#emptyTitle'),
@@ -973,14 +974,82 @@ const dom = {
     btnCopySql: $('#btnCopySql')
 };
 
+// ===== SMART SCROLL HEADER =====
+let isHeaderVisible = true;
+let lastScrollY = window.scrollY || window.pageYOffset || 0;
+
+function initSmartScrollHeader() {
+    const navWrapper = dom.topNavWrapper || $('#topNavWrapper');
+    if (!navWrapper) return;
+
+    const SCROLL_THRESHOLD = 50; // Minimum scroll before hiding
+    const SCROLL_DELTA = 5;      // Minimum movement to prevent jitter
+
+    window.addEventListener('scroll', () => {
+        // Don't auto-hide if a modal is open or search input is focused
+        if (dom.modalOverlay && !dom.modalOverlay.classList.contains('hidden')) return;
+        if (dom.deleteOverlay && !dom.deleteOverlay.classList.contains('hidden')) return;
+        if (dom.importOverlay && !dom.importOverlay.classList.contains('hidden')) return;
+        if (dom.cloudOverlay && !dom.cloudOverlay.classList.contains('hidden')) return;
+        if (dom.searchInput && dom.searchInput === document.activeElement) return;
+
+        const currentScrollY = window.scrollY || window.pageYOffset || 0;
+
+        // At top of page (or iOS negative bounce): always show
+        if (currentScrollY <= 10) {
+            if (!isHeaderVisible) {
+                isHeaderVisible = true;
+                navWrapper.classList.remove('header-hidden');
+            }
+            lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+            return;
+        }
+
+        // At bottom of page (iOS bottom bounce): don't trigger down-scroll hide
+        const maxScroll = (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        if (maxScroll > 0 && currentScrollY >= maxScroll - 15) {
+            lastScrollY = currentScrollY;
+            return;
+        }
+
+        const diff = currentScrollY - lastScrollY;
+
+        // Ignore micro scroll movements
+        if (Math.abs(diff) < SCROLL_DELTA) return;
+
+        if (diff > 0 && currentScrollY > SCROLL_THRESHOLD) {
+            // Scrolling DOWN past threshold -> hide header
+            if (isHeaderVisible) {
+                isHeaderVisible = false;
+                navWrapper.classList.add('header-hidden');
+            }
+        } else if (diff < 0) {
+            // Scrolling UP -> show header
+            if (!isHeaderVisible) {
+                isHeaderVisible = true;
+                navWrapper.classList.remove('header-hidden');
+            }
+        }
+
+        lastScrollY = currentScrollY;
+    }, { passive: true });
+}
+
 // ===== INIT =====
 function init() {
     loadTactics();
     populateFilterDropdowns();
     populateFormDropdowns();
     bindEvents();
+    initSmartScrollHeader();
 
-    isMatchMode = localStorage.getItem('r6s_match_mode') === 'true';
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        // Sadece mobil ekranlarda sayfa ilk yüklendiğinde Match Mode içeriği varsayılan olarak kapalı (collapsed)
+        isMatchMode = false;
+    } else {
+        isMatchMode = localStorage.getItem('r6s_match_mode') === 'true';
+    }
     if (dom.matchModeToggle) {
         dom.matchModeToggle.checked = isMatchMode;
     }
@@ -1474,6 +1543,10 @@ function resetFilters() {
     dom.searchClear.classList.add('hidden');
     syncFilterUI();
     renderTactics();
+    if (dom.topNavWrapper) {
+        isHeaderVisible = true;
+        dom.topNavWrapper.classList.remove('header-hidden');
+    }
 }
 
 function handleBadgeClick(e) {
@@ -2140,7 +2213,7 @@ async function fetchCloudTactics() {
 function subscribeToRealtime() {
     if (!supabaseClient) return;
     if (realtimeChannel) {
-        try { supabaseClient.removeChannel(realtimeChannel); } catch (e) {}
+        try { supabaseClient.removeChannel(realtimeChannel); } catch (e) { }
     }
 
     realtimeChannel = supabaseClient
@@ -2245,7 +2318,7 @@ function disconnectCloud() {
     localStorage.removeItem('r6s_supabase_url');
     localStorage.removeItem('r6s_supabase_key');
     if (supabaseClient && realtimeChannel) {
-        try { supabaseClient.removeChannel(realtimeChannel); } catch (e) {}
+        try { supabaseClient.removeChannel(realtimeChannel); } catch (e) { }
     }
     supabaseClient = null;
     realtimeChannel = null;

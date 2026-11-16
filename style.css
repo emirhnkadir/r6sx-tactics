@@ -95,14 +95,29 @@ body {
     border-radius: 4px;
 }
 
-/* ===== Header ===== */
-.app-header {
+/* ===== Smart Sticky Header & Navigation Wrapper ===== */
+.top-nav-wrapper {
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
     background-color: rgba(18, 18, 20, 0.65);
     backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(0);
+    will-change: transform;
+}
+
+.top-nav-wrapper.header-hidden {
+    transform: translateY(-100%);
+    pointer-events: none;
+}
+
+/* ===== Header ===== */
+.app-header {
+    width: 100%;
     border-bottom: 1px solid var(--border-color);
     height: var(--header-height);
 }
@@ -290,13 +305,7 @@ body {
     max-width: 1600px;
     margin: 0 auto;
     padding: 14px 20px 8px;
-    position: sticky;
-    top: var(--header-height);
-    z-index: 90;
-    background-color: rgba(18, 18, 20, 0.65);
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
 }
 
 /* ===== Match Mode Container & HUD ===== */
@@ -1821,6 +1830,10 @@ body {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+    /* Match Mode mobile collapsed optimization */
+    .match-mode-container:not(.active) .match-mode-panel {
+        display: none !important;
+    }
     .match-mode-panel {
         gap: 10px;
     }
